@@ -8,9 +8,6 @@ from rest_framework.response import Response
 
 
 class GoogleAuthToTokenView(APIView):
-    def get(self, request):
-        return Response({"details": settings.SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI}, status=status.HTTP_200_OK)
-
     def post(self, request):
         code = request.data.get('code')
         client_id = settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY
@@ -32,4 +29,4 @@ class GoogleAuthToTokenView(APIView):
 
         if access_token:
             return Response({"access_token": access_token}, status=status.HTTP_200_OK)
-        return Response({"error": "Invalid code", "token_data": token_data}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Failed to obtain Google access token"}, status=status.HTTP_400_BAD_REQUEST)

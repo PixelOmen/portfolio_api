@@ -7,6 +7,7 @@ name = "pypi"
 django = "*"
 drf-social-oauth2 = "==3.1.0"
 django-environ = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 
