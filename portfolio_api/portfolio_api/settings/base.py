@@ -20,6 +20,9 @@ INSTALLED_APPS = [
     # CORS
     'corsheaders',
 
+    # DRF
+    'rest_framework',
+
     # DRFSO2
     'oauth2_provider',
     'social_django',
@@ -113,6 +116,7 @@ AUTH_USER_MODEL = 'socialauth.CustomUser'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
         'drf_social_oauth2.authentication.SocialAuthentication',
     ),
