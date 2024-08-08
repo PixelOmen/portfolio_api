@@ -1,4 +1,4 @@
-import datetime
+from django.utils import timezone
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -33,10 +33,10 @@ class UserPostViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-        serializer.save(date_posted=datetime.datetime.now())
 
     def perform_update(self, serializer):
         serializer.save(owner=self.request.user)
+        serializer.save(date_modified=timezone.now())
 
     def perform_destroy(self, instance):
         if instance.owner != self.request.user:
