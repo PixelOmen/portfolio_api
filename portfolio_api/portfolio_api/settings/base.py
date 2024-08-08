@@ -17,6 +17,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # S3 storage
+    'storages',
+
     # CORS
     'corsheaders',
 
@@ -28,6 +31,7 @@ INSTALLED_APPS = [
     'social_django',
     'drf_social_oauth2',
 
+    # Apps
     'api',
     'socialauth',
 ]

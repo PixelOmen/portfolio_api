@@ -10,6 +10,8 @@ django-environ = "*"
 django-cors-headers = "*"
 djangorestframework = "*"
 pillow = "*"
+django-storages = "*"
+boto3 = "*"
 
 [dev-packages]
 
