@@ -1,3 +1,5 @@
+import datetime
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -31,6 +33,7 @@ class UserPostViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+        serializer.save(date_posted=datetime.datetime.now())
 
     def perform_update(self, serializer):
         serializer.save(owner=self.request.user)

@@ -6,6 +6,7 @@ class UserPost(models.Model):
     id = models.AutoField(primary_key=True)
     content = models.TextField(null=True, blank=True)
     date_posted = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
