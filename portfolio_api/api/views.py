@@ -17,12 +17,11 @@ class TokenTestView(APIView):
 
 
 class UserPostViewSet(ModelViewSet):
-    queryset = models.UserPost.objects.all()
     serializer_class = serializers.UserPostSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return self.queryset.filter(owner=self.request.user)
+        return models.UserPost.objects.filter(owner=self.request.user)
 
     def get_object(self):
         obj = super().get_object()
@@ -43,3 +42,22 @@ class UserPostViewSet(ModelViewSet):
             raise PermissionDenied(
                 "You do not have permission to delete this Post")
         instance.delete()
+
+
+class UserImageViewSet(ModelViewSet):
+    queryset = models.UserImage.objects.all()
+    serializer_class = serializers.UserImageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset.filter(owner=self.request.user)
+
+    def get_object(self):
+        obj = super().get_object()
+        if obj.owner != self.request.user:
+            raise PermissionDenied(
+                "You do not have permission to access this Image")
+        return obj
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)

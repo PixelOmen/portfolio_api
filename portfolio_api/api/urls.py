@@ -5,7 +5,7 @@ from . import views
 
 api_v1_router = DefaultRouter()
 api_v1_router.register(
-    r'user-posts', views.UserPostViewSet)
+    r'user-posts', views.UserPostViewSet, basename='user-posts')
 
 urlpatterns = [
     path('v1/token-test/', views.TokenTestView.as_view(), name='token-test'),

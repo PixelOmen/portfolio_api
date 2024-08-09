@@ -12,3 +12,13 @@ class UserPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserPost
         fields = ['id', 'content', 'date_posted', 'date_modified', 'owner']
+
+
+class UserImageSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    date_posted = serializers.DateTimeField(read_only=True)
+    owner = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = models.UserImage
+        fields = ['id', 'image', 'date_posted', 'owner']
