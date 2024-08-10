@@ -11,15 +11,15 @@ class UserPost(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
 
 class UserImage(models.Model):
     id = models.AutoField(primary_key=True)
-    image = models.ImageField(upload_to='images/', null=True)
+    image = models.FileField(upload_to='images/', null=True)
     date_posted = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.id
+        return str(self.id)

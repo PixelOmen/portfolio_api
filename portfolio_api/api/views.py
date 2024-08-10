@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.utils import timezone
 
 from rest_framework.views import APIView
@@ -9,10 +10,19 @@ from rest_framework.exceptions import PermissionDenied
 from . import models, serializers
 
 
+class ServerLimitsView(APIView):
+    def get(self, _):
+        return Response({
+            'max_image_size': settings.MAX_IMAGE_SIZE,
+            'max_post_length': settings.MAX_POST_LENGTH,
+            'allowed_image_extensions': settings.ALLOWED_IMAGE_EXTENSIONS,
+        })
+
+
 class TokenTestView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
+    def get(self, _):
         return Response({'details': 'You are authenticated!'})
 
 
@@ -45,12 +55,11 @@ class UserPostViewSet(ModelViewSet):
 
 
 class UserImageViewSet(ModelViewSet):
-    queryset = models.UserImage.objects.all()
     serializer_class = serializers.UserImageSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return self.queryset.filter(owner=self.request.user)
+        return models.UserImage.objects.filter(owner=self.request.user)
 
     def get_object(self):
         obj = super().get_object()
