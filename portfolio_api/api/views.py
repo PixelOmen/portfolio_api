@@ -14,6 +14,7 @@ class ServerLimitsView(APIView):
     def get(self, _):
         return Response({
             'max_image_size': settings.MAX_IMAGE_SIZE,
+            'max_user_images': settings.MAX_USER_IMAGES,
             'max_post_length': settings.MAX_POST_LENGTH,
             'allowed_image_extensions': settings.ALLOWED_IMAGE_EXTENSIONS,
         })
