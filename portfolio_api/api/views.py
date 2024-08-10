@@ -70,3 +70,10 @@ class UserImageViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    def perform_destroy(self, instance):
+        if instance.owner != self.request.user:
+            raise PermissionDenied(
+                "You do not have permission to delete this Image")
+        instance.image.delete(save=False)
+        instance.delete()
