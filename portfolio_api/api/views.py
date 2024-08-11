@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.utils import timezone
+from django.core.mail import send_mail
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,6 +9,20 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 
 from . import models, serializers
+
+
+class EmailTestView(APIView):
+    def post(self, request):
+        if not request.data.get('email'):
+            return Response({'details': 'Email not provided'}, status=400)
+        send_mail(
+            'Django Mail',
+            'This is a test email from Django.',
+            settings.EMAIL_HOST_USER,
+            [request.data['email']],
+            fail_silently=False,
+        )
+        return Response({'details': request.data})
 
 
 class ServerLimitsView(APIView):

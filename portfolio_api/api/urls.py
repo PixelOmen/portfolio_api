@@ -10,8 +10,9 @@ api_v1_router.register(
     r'user-images', views.UserImageViewSet, basename='user-images')
 
 urlpatterns = [
-    path('v1/server-limits/', views.ServerLimitsView.as_view(),
+    path('email-test/', views.EmailTestView.as_view(), name='email-test'),
+    path('server-limits/', views.ServerLimitsView.as_view(),
          name='server-limits'),
-    path('v1/token-test/', views.TokenTestView.as_view(), name='token-test'),
-    path('v1/', include(api_v1_router.urls)),
+    path('token-test/', views.TokenTestView.as_view(), name='token-test'),
+    path('', include(api_v1_router.urls)),
 ]
