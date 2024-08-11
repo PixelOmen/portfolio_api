@@ -10,6 +10,7 @@ api_v1_router.register(
     r'user-images', views.UserImageViewSet, basename='user-images')
 
 urlpatterns = [
+    path('email', views.display_email_template, name='email'),
     path('email-test/', views.EmailTestView.as_view(), name='email-test'),
     path('server-limits/', views.ServerLimitsView.as_view(),
          name='server-limits'),
