@@ -11,7 +11,7 @@ from django.template.loader import render_to_string
 
 
 def plain_text_message(user: str, contact_email: str, portfolio_link: str) -> str:
-    return f"""Hi {user},\n\nThanks for taking the time to explore the projects and demos I've put together. If you're interested in working together, or just have any questions or feedback, please don't hesitate to contact me at {contact_email}.\n\nBest,\nEmmanuel Acosta\nPortfolio: {portfolio_link}\n\n\n\nThis is an automated message.\nYou will not receive any further emails.\nYou're receiving this email because you associated your google email with my app for the first time."""
+    return f"""Hi {user},\n\nThank you for taking the time to explore the projects and demos I've put together. It means a lot to me.\n\nIf you're interested in working together, or just have any questions or feedback, please don't hesitate to contact me at {contact_email}.\n\nBest,\nEmmanuel Acosta\nPortfolio: {portfolio_link}\n\n\n\nThis is an automated message.\nYou will not receive any further emails.\nYou're receiving this email because you associated your google email with my app for the first time."""
 
 
 def ea_send_mail(subject: str, message: str,

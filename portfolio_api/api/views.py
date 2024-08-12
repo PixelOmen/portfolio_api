@@ -17,7 +17,7 @@ class EmailTestView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        result = email.send_welcome_email(request, html=True)
+        result = email.send_welcome_email(request, html=False)
         if result:
             return Response({'details': 'Email sent successfully'})
         else:
