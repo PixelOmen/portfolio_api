@@ -55,17 +55,18 @@ def send_welcome_email(request, html: bool = True, fail_silently: bool = True) -
     """ Send a welcome email to the user. """
     if html:
         return send_template_email(
-            subject="Emmanuel's Portfolio - Welcome!",
+            subject="Emmanuel's Portfolio - Thanks for stopping by!",
             message=plain_text_message(
                 request.user, settings.CONTACT_EMAIL, settings.EMAIL_PORTFOLIO_LINK),
             recipient_list=[request.user.email],
             context={'user': request.user,
-                     'portfolio_link': settings.EMAIL_PORTFOLIO_LINK},
+                     'portfolio_link': settings.EMAIL_PORTFOLIO_LINK,
+                     'email_logo_url': settings.EMAIL_LOGO_URL},
             fail_silently=fail_silently
         )
     else:
         return ea_send_mail(
-            subject="Emmanuel's Portfolio - Welcome!",
+            subject="Emmanuel's Portfolio - Thanks for stopping by!",
             message=plain_text_message(
                 request.user, settings.CONTACT_EMAIL, settings.EMAIL_PORTFOLIO_LINK),
             recipient_list=[request.user.email],

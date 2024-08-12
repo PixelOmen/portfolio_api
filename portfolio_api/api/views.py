@@ -26,7 +26,8 @@ class EmailTestView(APIView):
 
 def display_email_template(request):
     context = {'user': request.user,
-               'portfolio_link': settings.EMAIL_PORTFOLIO_LINK}
+               'portfolio_link': settings.EMAIL_PORTFOLIO_LINK,
+               'email_logo_url': settings.EMAIL_LOGO_URL}
     return render(request, 'email_template.html', context)
 
 

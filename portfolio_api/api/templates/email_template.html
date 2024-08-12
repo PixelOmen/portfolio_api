@@ -7,14 +7,18 @@
 </head>
 <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
     <div class="container" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
-        <div class="header" style="text-align: center; padding: 20px; background-color: #428ace; color: white; border-radius: 8px 8px 0 0;">
-            <h1>Thanks for trying my demos!</h1>
-            <h3>- Emmanuel Acosta</h3>
+        <div class="header" style="display: flex; justify-content: space-around; align-items: center; text-align: center; text-align: center; padding: 20px; background-color: #3e3e5d; color: whitesmoke; border-radius: 8px 8px 0 0;">
+            <img src="{{ email_logo_url }}" alt="Logo" name="Logo" width="100rem">
+            <div style="margin: auto">
+                <h1>Thanks for stopping by!</h1>                
+            </div>
         </div>
         <div class="content" style="padding: 20px; padding-bottom: 10px; text-align: left; color: #333333;">
-            <h1 style="font-size: 24px; margin-top: 0;">Hello, {{ user.first_name }}!</h1>
-            <p style="font-size: 16px; line-height: 1.5;">Thank you for visiting my site! I'm grateful that you've decided to explore the projects and demos I've put together. Your interest means a lot to me.</p>
+            <h1 style="font-size: 24px; margin-top: 0;">Hi, {{ user.first_name }}!</h1>
+            <p style="font-size: 16px; line-height: 1.5;">Thanks for taking the time to explore the projects and demos I've put together.</p>
             <p style="font-size: 16px; line-height: 1.5;">If you're interested in working together, or just have any questions or feedback, please don't hesitate to <a href="mailto:3D.Acosta@gmail.com">contact me</a>.</p>
+            <p style="font-size: 16px; line-height: 1.5;">Have an awesome day!</p>
+            <p style="font-size: 16px; line-height: 1.5;">- Emmanuel Acosta</p>
             <div class="btnContainer" style="padding: 0; text-align: center; margin-top: 20px;">
                 <p style="font-size: 16px; line-height: 1.5;">
                     Please visit again sometime.
