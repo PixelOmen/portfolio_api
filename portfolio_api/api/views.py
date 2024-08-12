@@ -12,20 +12,12 @@ from rest_framework.exceptions import PermissionDenied, MethodNotAllowed
 from . import models, serializers, email
 
 
+#  ------------ Debug ------------
 class EmailTestView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
-        if not request.data.get('email'):
-            return Response({'details': 'Email not provided'}, status=400)
-        # result = email.ea_send_mail(
-        #     subject='Django Mail',
-        #     message='This is a test email from Django.',
-        #     recipient_list=[request.data['email']],
-        # )
-        result = email.send_template_email(
-            subject='Django Mail',
-            message='This is a test email from Django.',
-            recipient_list=[request.data['email']],
-        )
+        result = email.send_welcome_email(request, html=True)
         if result:
             return Response({'details': 'Email sent successfully'})
         else:
@@ -33,7 +25,9 @@ class EmailTestView(APIView):
 
 
 def display_email_template(request):
-    return render(request, 'email_template.html')
+    context = {'user': request.user,
+               'portfolio_link': settings.EMAIL_PORTFOLIO_LINK}
+    return render(request, 'email_template.html', context)
 
 
 # ------------ Utility endpoints ------------
@@ -50,11 +44,17 @@ class ServerLimitsView(APIView):
 
 
 class TokenTestView(APIView):
-    """ Endpoint to simply test if the user is authenticated """
-
+    """
+    Endpoint to simply test if the user is authenticated and
+    send an email when they first associate their account.
+    """
     permission_classes = [IsAuthenticated]
 
-    def get(self, _):
+    def get(self, request):
+        if request.user.email and not request.user.welcome_email_sent:
+            email.send_welcome_email(request)
+            request.user.welcome_email_sent = True
+            request.user.save()
         return Response({'details': 'You are authenticated!'})
 
 

@@ -43,3 +43,7 @@ STORAGES = {
     },
 }
 MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/'
+
+
+# Email
+EMAIL_PORTFOLIO_LINK = env('EMAIL_PORTFOLIO_LINK_DEV')
