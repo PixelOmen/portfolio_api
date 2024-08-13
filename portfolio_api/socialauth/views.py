@@ -14,7 +14,7 @@ class GoogleAuthToTokenView(APIView):
         client_secret = settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
         redirect_uri = settings.SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI
 
-        token_url = 'https://oauth2.googleapis.com/token'
+        token_url = settings.SOCIAL_AUTH_GOOGLE_AUTHCODE_TOKEN_URL
         token_data = {
             'code': code,
             'client_id': client_id,

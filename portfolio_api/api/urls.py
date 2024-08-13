@@ -2,6 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from . import views
+from . import debug
 
 api_v1_router = DefaultRouter()
 api_v1_router.register(
@@ -10,8 +11,11 @@ api_v1_router.register(
     r'user-images', views.UserImageViewSet, basename='user-images')
 
 urlpatterns = [
-    path('email', views.display_email_template, name='email'),
-    path('email-test/', views.EmailTestView.as_view(), name='email-test'),
+    # --- Debug endpoints ---
+    path('email', debug.display_email_template, name='email'),
+    path('email-test/', debug.EmailTestView.as_view(), name='email-test'),
+
+    # --- API endpoints ---
     path('server-limits/', views.ServerLimitsView.as_view(),
          name='server-limits'),
     path('token-test/', views.TokenTestView.as_view(), name='token-test'),

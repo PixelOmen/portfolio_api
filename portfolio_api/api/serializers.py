@@ -22,3 +22,12 @@ class UserImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserImage
         fields = ['id', 'image', 'date_posted', 'owner']
+
+
+class UserMessageSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    date_posted = serializers.DateTimeField(read_only=True)
+
+    class Meta:
+        model = models.UserMessage
+        fields = ['id', 'name', 'email', 'content', 'date_posted']

@@ -12,25 +12,6 @@ from rest_framework.exceptions import PermissionDenied, MethodNotAllowed
 from . import models, serializers, email
 
 
-#  ------------ Debug ------------
-class EmailTestView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        result = email.send_welcome_email(request, html=False)
-        if result:
-            return Response({'details': 'Email sent successfully'})
-        else:
-            return Response({'details': 'Email failed to send'}, status=500)
-
-
-def display_email_template(request):
-    context = {'user': request.user,
-               'portfolio_link': settings.EMAIL_PORTFOLIO_LINK,
-               'email_logo_url': settings.EMAIL_LOGO_URL}
-    return render(request, 'email_template.html', context)
-
-
 # ------------ Utility endpoints ------------
 class ServerLimitsView(APIView):
     """ Server limits for the Frontend, not enforced by the API """
@@ -59,7 +40,7 @@ class TokenTestView(APIView):
         return Response({'details': 'You are authenticated!'})
 
 
-# ------------ User data ViewSets ------------
+# ----------- Auth User Data ------------
 
 # Note: PermissionDenied exceptions are not needed because
 # querysets are filtered by owner but it is an extra layer of security.
