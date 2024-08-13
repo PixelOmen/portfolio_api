@@ -33,4 +33,4 @@ class UserMessage(models.Model):
     date_posted = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return str(f"{self.id}")
+        return str(f"{self.name}")

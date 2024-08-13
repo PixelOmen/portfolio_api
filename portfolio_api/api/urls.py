@@ -16,8 +16,10 @@ urlpatterns = [
     path('email-test/', debug.EmailTestView.as_view(), name='email-test'),
 
     # --- API endpoints ---
+    path('token-test/', views.TokenTestView.as_view(), name='token-test'),
     path('server-limits/', views.ServerLimitsView.as_view(),
          name='server-limits'),
-    path('token-test/', views.TokenTestView.as_view(), name='token-test'),
+    path('user-messages/', views.UserMessageViewSet.as_view(),
+         name='user-messages'),
     path('', include(api_v1_router.urls)),
 ]

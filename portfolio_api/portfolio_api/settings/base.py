@@ -123,6 +123,11 @@ REST_FRAMEWORK = {
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
         'drf_social_oauth2.authentication.SocialAuthentication',
     ),
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '1000/day',
+        'user': '1000/day',
+        'anon_message': '50/min',
+    }
 }
 
 AUTHENTICATION_BACKENDS = (

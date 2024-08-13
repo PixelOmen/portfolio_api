@@ -1,8 +1,6 @@
 from django.conf import settings
 from django.utils import timezone
 
-from django.shortcuts import render
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -10,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied, MethodNotAllowed
 
 from . import models, serializers, email
+from .throttling import AnonMessageThrottle
 
 
 # ------------ Utility endpoints ------------
@@ -40,10 +39,22 @@ class TokenTestView(APIView):
         return Response({'details': 'You are authenticated!'})
 
 
-# ----------- Auth User Data ------------
+# ----------- Anon User Endpoints ------------
+class UserMessageViewSet(APIView):
+    throttle_classes = [AnonMessageThrottle]
+
+    def post(self, request):
+        serializer = serializers.UserMessageSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+# ----------- Auth User Endpoints ------------
 
 # Note: PermissionDenied exceptions are not needed because
 # querysets are filtered by owner but it is an extra layer of security.
+
 
 class UserPostViewSet(ModelViewSet):
     serializer_class = serializers.UserPostSerializer
