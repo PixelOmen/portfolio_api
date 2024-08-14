@@ -136,6 +136,10 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
+# Static (mainly for admin/drf)
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_URL = '/static/'
+
 # Google Base Settings (redirect in dev/prod settings)
 SOCIAL_AUTH_GOOGLE_AUTHCODE_TOKEN_URL = env('GOOGLE_AUTHCODE_TOKEN_URL')
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('GOOGLE_OAUTH2_CLIENT_ID')

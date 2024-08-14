@@ -12,6 +12,7 @@ djangorestframework = "*"
 pillow = "*"
 django-storages = "*"
 boto3 = "*"
+gunicorn = "*"
 
 [dev-packages]
 
