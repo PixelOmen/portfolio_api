@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     # Apps
     'api',
     'socialauth',
+    'cmdutils'
 ]
 
 MIDDLEWARE = [
@@ -169,3 +170,8 @@ EMAIL_USE_SSL = env.bool('EMAIL_USE_SSL')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 CONTACT_EMAIL = env('CONTACT_EMAIL')
+
+
+# Celery
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND')
