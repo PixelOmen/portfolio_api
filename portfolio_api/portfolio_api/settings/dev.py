@@ -53,16 +53,26 @@ EMAIL_LOGO_URL = env('EMAIL_LOGO_URL')
 # Celery
 CELERY_BROKER_URL = env('CELERY_BROKER_URL_DEV')
 CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND_DEV')
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 # Loggers
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[%(asctime)s: %(levelname)s/%(processName)s] %(name)s: %(message)s',
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
     'handlers': {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'stream': sys.stdout,
+            'formatter': 'verbose',
         },
     },
     'root': {
@@ -71,6 +81,16 @@ LOGGING = {
     },
     'loggers': {
         'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'celery': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'celery.beat': {
             'handlers': ['console'],
             'level': 'INFO',
             'propagate': True,

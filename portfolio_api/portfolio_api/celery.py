@@ -3,12 +3,11 @@ from django.conf import settings
 
 celery_app = Celery('portfolio_api')
 celery_app.config_from_object('django.conf:settings', namespace='CELERY')
-celery_app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
-
+celery_app.autodiscover_tasks()
 
 TEST_SCHEDULE = {
-    'task_every_hour': {
-        'task': 'portfolio_api.tasks.beat_task',
+    'task_every_10_sec': {
+        'task': 'api.tasks.beat_task',
         'schedule': 10.0,
     },
 }

@@ -1,15 +1,14 @@
+import logging
 from celery import shared_task
 
-# change to logger
 
-
-@shared_task(bind=True)
+@shared_task
 def beat_task():
-    print("Beat Task")
+    logging.info("Beat Task")
     return "Beat Task Done"
 
 
 @shared_task(bind=True)
 def debug_task(self):
-    print(f'Request: {self.request!r}')
+    logging.info(f'Request: {self.request!r}')
     return "Debug Task Done"
