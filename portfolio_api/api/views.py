@@ -41,11 +41,11 @@ class TokenTestView(APIView):
 
 
 # ----------- Anon User Endpoints ------------
-class UserMessageViewSet(APIView):
+class AnonMessageViewSet(APIView):
     throttle_classes = [AnonMessageThrottle]
 
     def post(self, request):
-        serializer = serializers.UserMessageSerializer(data=request.data)
+        serializer = serializers.AnonMessageSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)

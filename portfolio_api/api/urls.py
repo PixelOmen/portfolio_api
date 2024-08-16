@@ -14,12 +14,12 @@ urlpatterns = [
     path('token-test/', views.TokenTestView.as_view(), name='token-test'),
     path('server-limits/', views.ServerLimitsView.as_view(),
          name='server-limits'),
-    path('user-messages/', views.UserMessageViewSet.as_view(),
-         name='user-messages'),
+    path('anon-messages/', views.AnonMessageViewSet.as_view(),
+         name='anon-messages'),
     path('', include(api_v1_router.urls)),
 
     # --- Debug endpoints ---
-    path('email', debug.display_email_template, name='email'),
+    # path('email', debug.display_email_template, name='email'),
     # path('email-test/', debug.EmailTestView.as_view(), name='email-test'),
     # path('celery-test/', debug.CeleryTestView.as_view(), name='celery-test'),
 ]

@@ -25,7 +25,7 @@ class UserImage(models.Model):
         return str(self.id)
 
 
-class UserMessage(models.Model):
+class AnonMessage(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     email = models.EmailField(max_length=50)
