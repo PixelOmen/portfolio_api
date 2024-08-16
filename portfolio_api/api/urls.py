@@ -19,7 +19,7 @@ urlpatterns = [
     path('', include(api_v1_router.urls)),
 
     # --- Debug endpoints ---
-    # path('email', debug.display_email_template, name='email'),
+    path('email', debug.display_email_template, name='email'),
     # path('email-test/', debug.EmailTestView.as_view(), name='email-test'),
     # path('celery-test/', debug.CeleryTestView.as_view(), name='celery-test'),
 ]
