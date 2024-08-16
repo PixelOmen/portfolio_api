@@ -131,6 +131,7 @@ REST_FRAMEWORK = {
         'anon': '1000/day',
         'user': '1000/day',
         'anon_message': '50/min',
+        'user_image': '30/day',
     }
 }
 

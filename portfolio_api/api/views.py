@@ -7,8 +7,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied, MethodNotAllowed
 
-from .throttling import AnonMessageThrottle
-from . import models, serializers, email, tasks
+from . import models, serializers, tasks
+from .throttling import AnonMessageThrottle, UserImageThrottle
 
 
 # ------------ Utility endpoints ------------
@@ -91,6 +91,11 @@ class UserPostViewSet(ModelViewSet):
 class UserImageViewSet(ModelViewSet):
     serializer_class = serializers.UserImageSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_throttles(self):
+        if self.request.method == 'POST':
+            return [UserImageThrottle()]
+        return super().get_throttles()
 
     def get_queryset(self):
         return models.UserImage.objects.filter(owner=self.request.user)
