@@ -1,0 +1,6 @@
+services:
+  redis:
+    container_name: redis_local_staging
+    image: redis:7.4-alpine
+    ports:
+      - "6379:6379"

@@ -1,6 +1,7 @@
 services:
-  django:
-    container_name: django_local_staging
+  celery_worker:
+    container_name: celery_worker_local_staging
+    user: nobody
     build:
       context: ../portfolio_api
       dockerfile: Dockerfile.staging
@@ -31,8 +32,6 @@ services:
       - EMAIL_LOGO_URL=${EMAIL_LOGO_URL}
       - CELERY_BROKER_URL_DEV=${CELERY_BROKER_URL_DEV}
       - CELERY_RESULT_BACKEND_DEV=${CELERY_RESULT_BACKEND_DEV}
-    ports:
-      - "8000:8000"
     volumes:
       - ../portfolio_api:/app
-    command: sh -c "python manage.py collectstatic --noinput && gunicorn portfolio_api.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+    command: sh -c "celery -A portfolio_api worker --loglevel=info"
