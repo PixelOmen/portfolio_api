@@ -7,8 +7,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied, MethodNotAllowed
 
-from . import models, serializers, email
 from .throttling import AnonMessageThrottle
+from . import models, serializers, email, tasks
 
 
 # ------------ Utility endpoints ------------
@@ -33,7 +33,8 @@ class TokenTestView(APIView):
 
     def get(self, request):
         if request.user.email and not request.user.welcome_email_sent:
-            email.send_welcome_email(request)
+            tasks.send_welcome_email_task.delay(
+                request.user.first_name, request.user.email)  # type: ignore
             request.user.welcome_email_sent = True
             request.user.save()
         return Response({'details': 'You are authenticated!'})

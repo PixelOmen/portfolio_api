@@ -7,7 +7,7 @@ celery_app.autodiscover_tasks()
 TEST_SCHEDULE = {
     'task_every_10_sec': {
         'task': 'api.tasks.beat_task',
-        'schedule': 10.0,
+        'schedule': 30.0,
     },
 }
 

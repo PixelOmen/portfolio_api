@@ -1,6 +1,8 @@
 import logging
 from celery import shared_task
 
+from . import email
+
 
 @shared_task
 def beat_task():
@@ -9,6 +11,6 @@ def beat_task():
 
 
 @shared_task(bind=True)
-def debug_task(self):
-    logging.info(f'Request: {self.request!r}')
-    return "Debug Task Done"
+def send_welcome_email_task(self, username: str, user_email: str):
+    email.send_welcome_email(username, user_email)
+    return f"Welcome Email sent"

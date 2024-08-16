@@ -1,12 +1,23 @@
-from django.conf import settings
+import logging
 
+from django.conf import settings
 from django.shortcuts import render
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from . import email
+from . import email, tasks
+
+LOGGER = logging.getLogger('django')
+
+
+class CeleryTestView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        tasks.debug_task.delay()  # type: ignore
+        return Response({'details': 'Celery task sent'})
 
 
 class EmailTestView(APIView):
