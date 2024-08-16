@@ -1,5 +1,4 @@
 from celery import Celery
-from django.conf import settings
 
 celery_app = Celery('portfolio_api')
 celery_app.config_from_object('django.conf:settings', namespace='CELERY')
