@@ -28,6 +28,7 @@ jobs:
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }}
 
       - name: Build Docker image
+        working-directory: ./portfolio_api
         run: docker build -t eaportfolio-django:latest .
 
       - name: Tag Docker image
