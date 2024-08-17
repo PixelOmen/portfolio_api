@@ -2,7 +2,6 @@ services:
   django:
     container_name: django_local_staging
     build:
-      context: ../portfolio_api
       dockerfile: Dockerfile.staging
     environment:
       - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
