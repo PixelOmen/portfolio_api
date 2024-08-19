@@ -30,6 +30,7 @@ def wait_for_task_completion(ecs_client, cluster, task_id):
 
 def main():
     print('Failing the migration')
+    print(os.environ['EMAIL_HOST_USER'])
     exit(1)
     # print("Verifying environment variables...")
     # region = verify_environment_variable("REGION")
