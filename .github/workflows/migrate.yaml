@@ -25,8 +25,8 @@ jobs:
         
       - name: Load environment variables
         run: |
-          echo "${{ secrets.DJANGO_ENV_DEV }}" > .env
-          source .env
+          echo "${{ secrets.DJANGO_ENV_DEV }}" > env
+          source ./env
 
       - name: Run ECS Migration Task
         run: |
