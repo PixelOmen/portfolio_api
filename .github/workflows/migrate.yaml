@@ -30,4 +30,5 @@ jobs:
       - name: Run ECS Migration Task
         run: |
           source djangoenv
+          echo $EMAIL_HOST_USER
           python migration_script/migrate.py
