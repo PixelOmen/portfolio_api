@@ -25,9 +25,9 @@ jobs:
         
       - name: Load environment variables
         run: |
-          echo "${{ secrets.DJANGO_ENV_DEV }}" > env
+          echo "${{ secrets.DJANGO_ENV_DEV }}" > djangoenv
           
       - name: Run ECS Migration Task
         run: |
-          source ./env
+          source djangoenv
           python migration_script/migrate.py
