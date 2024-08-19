@@ -23,8 +23,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install boto3
         
-      - name: Load .env file
-        run: source portfolio_api/.env
+      - name: Load environment variables
+        run: |
+          echo "${{ secrets.DJANGO_ENV_DEV }}" > .env
+          source .env
 
       - name: Run ECS Migration Task
         run: |
