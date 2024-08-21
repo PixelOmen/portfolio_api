@@ -1,9 +1,11 @@
 name: Call ECS Migration Task (Dev)
 
 on:
-  push:
-    branches:
-      - dev
+  workflow_run:
+    workflows:
+      - 'Build and Push to ECR (Dev)'
+    types:
+      - completed
 
 permissions:
   id-token: write

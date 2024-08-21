@@ -20,8 +20,6 @@ def get_ecs_task_arn(ecs_client, task_definition_arn):
     except Exception as e:
         print(f"Error finding task definition: {e}")
         exit(1)
-    print(f"Task definition found: {task_arn}")
-    exit(0)
     return task_arn
 
 
