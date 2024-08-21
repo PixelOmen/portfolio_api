@@ -11,6 +11,20 @@ def verify_environment_variable(var_name):
     return var
 
 
+def get_ecs_task_definition(ecs_client, task_definition_arn):
+    try:
+        response = ecs_client.describe_task_definition(
+            taskDefinition=task_definition_arn
+        )
+        task_arn = response['taskDefinition']['taskDefinitionArn']
+    except Exception as e:
+        print(f"Error finding task definition: {e}")
+        exit(1)
+    print(f"Task definition found: {task_arn}")
+    exit(0)
+    return task_arn
+
+
 def launch_ecs_task(ecs_client, cluster, task_definition, subnets, security_group_id):
     try:
         response = ecs_client.run_task(
