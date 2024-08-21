@@ -3,9 +3,9 @@ name: Build and Push to ECR (Dev)
 on:
   workflow_run:
     workflows:
-      - 'migrate_dev'
+      - 'Call ECS Migration Task (Dev) - Off'
     types:
-      - completed      
+      - completed
 
 permissions:
   id-token: write

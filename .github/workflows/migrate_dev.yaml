@@ -1,4 +1,4 @@
-name: Call ECS Migration Task
+name: Call ECS Migration Task (Dev)
 
 on:
   push:
@@ -15,10 +15,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: '3.10'
 
@@ -34,19 +34,8 @@ jobs:
       - name: Run ECS Migration Task
         run: |
           source djangoenv
-          export AWS_REGION=$AWS_REGION_DEV
-          export TEST=TESTVAR
-          echo 'testvar is'
-          echo $TEST
-          echo 'end testvar'
-          echo 'region is'
-          echo $AWS_REGION_DEV
-          echo 'end region'          
-          echo 'region is'
-          echo $AWS_REGION
-          echo 'end region'
-          # export AWS_CLUSTER_NAME=$AWS_MIGRATE_CLUSTER_NAME_DEV
-          # export AWS_MIGRATE_TASK_DEF=$AWS_MIGRATE_TASK_DEF_DEV
-          # export AWS_MIGRATE_SUBNETS=$AWS_MIGRATE_SUBNETS_DEV
-          # export AWS_MIGRATE_SECURITY_GROUP=$AWS_MIGRATE_SECURITY_GROUP_DEV
-          # python migration_script/migrate.py
+          export AWS_CLUSTER_NAME=$AWS_MIGRATE_CLUSTER_NAME_DEV
+          export AWS_MIGRATE_TASK_DEF=$AWS_MIGRATE_TASK_DEF_DEV
+          export AWS_MIGRATE_SUBNETS=$AWS_MIGRATE_SUBNETS_DEV
+          export AWS_MIGRATE_SECURITY_GROUP=$AWS_MIGRATE_SECURITY_GROUP_DEV
+          python migration_script/migrate.py
