@@ -23,6 +23,12 @@ jobs:
           role-to-assume: ${{ secrets.AWS_GITHUB_ROLE_ARN_STAGE }}
           aws-region: ${{ secrets.AWS_REGION_STAGE }}
 
+      - name: Create and push env to S3
+        run: |
+          echo "${{ secrets.DJANGO_ENV }}" > djangoenv
+          source djangoenv
+          aws s3 cp djangoenv s3://$AWS_S3_ENV_BUCKET_STAGE/django-celery.env          
+
       - name: Log in to Amazon ECR
         run: |
           aws ecr get-login-password --region ${{ secrets.AWS_REGION_STAGE }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION_STAGE }}.amazonaws.com
