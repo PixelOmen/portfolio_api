@@ -26,7 +26,8 @@ jobs:
       - name: Create and push env to S3
         run: |
           echo "${{ secrets.DJANGO_ENV_DEV }}" > djangoenv
-          aws s3 cp djangoenv s3://${{ secrets.AWS_S3_BUCKET_DEV }}/django-celery.env
+          source djangoenv
+          aws s3 cp djangoenv s3://$AWS_S3_ENV_BUCKET_DEV/django-celery.env
 
       - name: Log in to Amazon ECR
         run: |
