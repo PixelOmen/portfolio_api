@@ -25,7 +25,7 @@ jobs:
   push_env:
     needs: get_env
     runs-on: ubuntu-latest
-    uses: ./.github/workflows/pushenv_S3_dev.yml
+    uses: ./.github/workflows/pushenv_S3_dev.yaml
     with:
       aws_role: ${{ secrets.AWS_GITHUB_ROLE_ARN_DEV }}
       aws_region: ${{ secrets.AWS_REGION_DEV }}
