@@ -8,6 +8,8 @@ RUN apk update && apk add --no-cache \
     libffi-dev \
     openssl-dev
 
+RUN pip install --upgrade pip
+
 WORKDIR /app
 
 COPY ./requirements.txt /app/
