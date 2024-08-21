@@ -35,7 +35,12 @@ jobs:
         run: |
           source djangoenv
           export AWS_REGION=$AWS_REGION_DEV
+          echo 'region is'
+          echo $AWS_REGION_DEV
+          echo 'end region'          
+          echo 'region is'
           echo $AWS_REGION
+          echo 'end region'
           # export AWS_CLUSTER_NAME=$AWS_MIGRATE_CLUSTER_NAME_DEV
           # export AWS_MIGRATE_TASK_DEF=$AWS_MIGRATE_TASK_DEF_DEV
           # export AWS_MIGRATE_SUBNETS=$AWS_MIGRATE_SUBNETS_DEV
