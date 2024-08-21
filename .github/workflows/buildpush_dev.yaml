@@ -20,6 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Load environment
+        id: load_env
         run: |
           echo "${{ secrets.DJANGO_ENV }}" > djangoenv
           source djangoenv
