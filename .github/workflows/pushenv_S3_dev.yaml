@@ -38,4 +38,6 @@ jobs:
         run: |
           echo "${{ secrets.env }}" > envfile
           source envfile
-          aws s3 cp envfile s3://${{ secrets.bucket }}/${{ inputs.targetname }}
+          export bucket=${{ secrets.bucket }}
+          export targetname=${{ inputs.targetname }}
+          aws s3 cp envfile s3://$bucket/$targetname

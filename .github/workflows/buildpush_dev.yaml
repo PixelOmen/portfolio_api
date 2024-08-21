@@ -12,7 +12,9 @@ permissions:
 
 jobs:
   get_env:
-    runs-on: ubuntu-latest    
+    runs-on: ubuntu-latest
+    outputs:
+      ENV_BUCKET: ${{ steps.load_env.outputs.ENV_BUCKET }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
