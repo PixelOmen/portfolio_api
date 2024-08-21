@@ -26,11 +26,12 @@ jobs:
   push_env:
     needs: get_env
     uses: ./.github/workflows/pushenv_S3_dev.yaml
-    with:
+    secrets:
       aws_role: ${{ secrets.AWS_GITHUB_ROLE_ARN_DEV }}
       aws_region: ${{ secrets.AWS_REGION_DEV }}
       env: ${{ secrets.DJANGO_ENV }}
       bucket: ${{ needs.get_env.outputs.ENV_BUCKET }}
+    with:
       targetname: django-celery.env
 
 
