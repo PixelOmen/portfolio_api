@@ -1,0 +1,39 @@
+name: Build and Push to ECR
+
+on:
+  push:
+    branches:
+      - dev
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4         
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ROLE_ARN_DEV }}
+          aws-region: ${{ secrets.AWS_REGION_DEV }}
+
+      - name: Log in to Amazon ECR
+        run: |
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION_DEV }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION_DEV }}.amazonaws.com
+
+      - name: Build Docker image
+        working-directory: ./portfolio_api
+        run: docker build -t eaportfolio-django:latest .
+
+      - name: Tag Docker image
+        run: docker tag eaportfolio-django:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION_DEV }}.amazonaws.com/${{ secrets.AWS_ECR_REPO_DEV }}:latest
+
+      - name: Push Docker image to ECR
+        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION_DEV }}.amazonaws.com/${{ secrets.AWS_ECR_REPO_DEV }}:latest
+        

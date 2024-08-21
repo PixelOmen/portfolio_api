@@ -1,45 +1,42 @@
 services:
 
   redis:
-    container_name: redis_local_staging
+    container_name: redis
     image: redis:7.4-alpine
     ports:
       - "6379:6379"
+
+  postgres:
+    container_name: postgres
+    image: postgres:15.2-alpine
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB_NAME}
+      - POSTGRES_USER=${POSTGRES_DB_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_DB_PASSWORD}
+    ports:
+      - ${POSTGRES_DB_PORT}:5432
+
+  django_build:
+    container_name: django_build
+    depends_on:
+      - redis
+      - postgres
+    build:
+      dockerfile: Dockerfile.staging
+    image: django_app:latest
+    env_file:
+      - .env
 
   celery_worker:
     container_name: celery_worker_local_staging
     user: nobody
     depends_on:
       - redis
-    build:
-      dockerfile: Dockerfile.staging
-    environment:
-      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
-      - DJANGO_SECRET_KEY_DEV=${DJANGO_SECRET_KEY_DEV}
-      - GOOGLE_AUTHCODE_TOKEN_URL=${GOOGLE_AUTHCODE_TOKEN_URL}
-      - GOOGLE_OAUTH2_CLIENT_ID=${GOOGLE_OAUTH2_CLIENT_ID}
-      - GOOGLE_OAUTH2_CLIENT_SECRET=${GOOGLE_OAUTH2_CLIENT_SECRET}
-      - GOOGLE_OAUTH2_REDIRECT_URI_DEV=${GOOGLE_OAUTH2_REDIRECT_URI_DEV}
-      - AWS_ACCESS_KEY_ID_DEV=${AWS_ACCESS_KEY_ID_DEV}
-      - AWS_SECRET_ACCESS_KEY_DEV=${AWS_SECRET_ACCESS_KEY_DEV}
-      - AWS_STORAGE_BUCKET_NAME_DEV=${AWS_STORAGE_BUCKET_NAME_DEV}
-      - AWS_S3_REGION_NAME_DEV=${AWS_S3_REGION_NAME_DEV}
-      - ALLOWED_IMAGE_EXTENSIONS=${ALLOWED_IMAGE_EXTENSIONS}
-      - MAX_POST_LENGTH=${MAX_POST_LENGTH}
-      - MAX_IMAGE_SIZE=${MAX_IMAGE_SIZE}
-      - MAX_USER_IMAGES=${MAX_USER_IMAGES}
-      - EMAIL_HOST=${EMAIL_HOST}
-      - EMAIL_PORT=${EMAIL_PORT}
-      - EMAIL_USE_TLS=${EMAIL_USE_TLS}
-      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
-      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
-      - EMAIL_USE_SSL=${EMAIL_USE_SSL}
-      - CONTACT_EMAIL=${CONTACT_EMAIL}
-      - EMAIL_PORTFOLIO_LINK_DEV=${EMAIL_PORTFOLIO_LINK_DEV}
-      - EMAIL_PORTFOLIO_LINK_PROD=${EMAIL_PORTFOLIO_LINK_PROD}
-      - EMAIL_LOGO_URL_DEV=${EMAIL_LOGO_URL_DEV}
-      - CELERY_BROKER_URL_DEV=${CELERY_BROKER_URL_DEV}
-      - CELERY_RESULT_BACKEND_DEV=${CELERY_RESULT_BACKEND_DEV}
+      - postgres
+      - django_build
+    image: django_app:latest
+    env_file:
+      - .env
     volumes:
       - ../portfolio_api:/app
     command: sh -c "celery -A portfolio_api worker --loglevel=info"      
@@ -49,35 +46,11 @@ services:
     user: nobody
     depends_on:
       - redis
-    build:
-      dockerfile: Dockerfile.staging
-    environment:
-      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
-      - DJANGO_SECRET_KEY_DEV=${DJANGO_SECRET_KEY_DEV}
-      - GOOGLE_AUTHCODE_TOKEN_URL=${GOOGLE_AUTHCODE_TOKEN_URL}
-      - GOOGLE_OAUTH2_CLIENT_ID=${GOOGLE_OAUTH2_CLIENT_ID}
-      - GOOGLE_OAUTH2_CLIENT_SECRET=${GOOGLE_OAUTH2_CLIENT_SECRET}
-      - GOOGLE_OAUTH2_REDIRECT_URI_DEV=${GOOGLE_OAUTH2_REDIRECT_URI_DEV}
-      - AWS_ACCESS_KEY_ID_DEV=${AWS_ACCESS_KEY_ID_DEV}
-      - AWS_SECRET_ACCESS_KEY_DEV=${AWS_SECRET_ACCESS_KEY_DEV}
-      - AWS_STORAGE_BUCKET_NAME_DEV=${AWS_STORAGE_BUCKET_NAME_DEV}
-      - AWS_S3_REGION_NAME_DEV=${AWS_S3_REGION_NAME_DEV}
-      - ALLOWED_IMAGE_EXTENSIONS=${ALLOWED_IMAGE_EXTENSIONS}
-      - MAX_POST_LENGTH=${MAX_POST_LENGTH}
-      - MAX_IMAGE_SIZE=${MAX_IMAGE_SIZE}
-      - MAX_USER_IMAGES=${MAX_USER_IMAGES}
-      - EMAIL_HOST=${EMAIL_HOST}
-      - EMAIL_PORT=${EMAIL_PORT}
-      - EMAIL_USE_TLS=${EMAIL_USE_TLS}
-      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
-      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
-      - EMAIL_USE_SSL=${EMAIL_USE_SSL}
-      - CONTACT_EMAIL=${CONTACT_EMAIL}
-      - EMAIL_PORTFOLIO_LINK_DEV=${EMAIL_PORTFOLIO_LINK_DEV}
-      - EMAIL_PORTFOLIO_LINK_PROD=${EMAIL_PORTFOLIO_LINK_PROD}
-      - EMAIL_LOGO_URL_DEV=${EMAIL_LOGO_URL_DEV}
-      - CELERY_BROKER_URL_DEV=${CELERY_BROKER_URL_DEV}
-      - CELERY_RESULT_BACKEND_DEV=${CELERY_RESULT_BACKEND_DEV}
+      - postgres
+      - django_build      
+    image: django_app:latest
+    env_file:
+      - .env    
     volumes:
       - ../portfolio_api:/app
     command: sh -c "celery -A portfolio_api beat --loglevel=info"
@@ -86,37 +59,13 @@ services:
     container_name: django_local_staging
     depends_on:
       - redis
-    build:
-      dockerfile: Dockerfile.staging
-    environment:
-      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
-      - DJANGO_SECRET_KEY_DEV=${DJANGO_SECRET_KEY_DEV}
-      - GOOGLE_AUTHCODE_TOKEN_URL=${GOOGLE_AUTHCODE_TOKEN_URL}
-      - GOOGLE_OAUTH2_CLIENT_ID=${GOOGLE_OAUTH2_CLIENT_ID}
-      - GOOGLE_OAUTH2_CLIENT_SECRET=${GOOGLE_OAUTH2_CLIENT_SECRET}
-      - GOOGLE_OAUTH2_REDIRECT_URI_DEV=${GOOGLE_OAUTH2_REDIRECT_URI_DEV}
-      - AWS_ACCESS_KEY_ID_DEV=${AWS_ACCESS_KEY_ID_DEV}
-      - AWS_SECRET_ACCESS_KEY_DEV=${AWS_SECRET_ACCESS_KEY_DEV}
-      - AWS_STORAGE_BUCKET_NAME_DEV=${AWS_STORAGE_BUCKET_NAME_DEV}
-      - AWS_S3_REGION_NAME_DEV=${AWS_S3_REGION_NAME_DEV}
-      - ALLOWED_IMAGE_EXTENSIONS=${ALLOWED_IMAGE_EXTENSIONS}
-      - MAX_POST_LENGTH=${MAX_POST_LENGTH}
-      - MAX_IMAGE_SIZE=${MAX_IMAGE_SIZE}
-      - MAX_USER_IMAGES=${MAX_USER_IMAGES}
-      - EMAIL_HOST=${EMAIL_HOST}
-      - EMAIL_PORT=${EMAIL_PORT}
-      - EMAIL_USE_TLS=${EMAIL_USE_TLS}
-      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
-      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
-      - EMAIL_USE_SSL=${EMAIL_USE_SSL}
-      - CONTACT_EMAIL=${CONTACT_EMAIL}
-      - EMAIL_PORTFOLIO_LINK_DEV=${EMAIL_PORTFOLIO_LINK_DEV}
-      - EMAIL_PORTFOLIO_LINK_PROD=${EMAIL_PORTFOLIO_LINK_PROD}
-      - EMAIL_LOGO_URL_DEV=${EMAIL_LOGO_URL_DEV}
-      - CELERY_BROKER_URL_DEV=${CELERY_BROKER_URL_DEV}
-      - CELERY_RESULT_BACKEND_DEV=${CELERY_RESULT_BACKEND_DEV}   
+      - postgres
+      - django_build      
+    image: django_app:latest
+    env_file:
+      - .env
     ports:
       - "8000:8000"
     volumes:
       - ../portfolio_api:/app
-    command: sh -c "python manage.py collectstatic --noinput && python manage.py migrate && python manage.py create_oauth_app &&gunicorn portfolio_api.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+    command: sh -c "python manage.py collectstatic --noinput && python manage.py migrate && python manage.py create_oauth_app && gunicorn portfolio_api.wsgi:application --bind 0.0.0.0:8000 --workers 3"

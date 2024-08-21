@@ -4,9 +4,7 @@ import os
 import sys
 import environ
 
-env = environ.Env(
-    DJANGO_SETTINGS_MODULE=(str, 'portfolio_api.settings.dev')
-)
+env = environ.Env()
 environ.Env.read_env()
 
 

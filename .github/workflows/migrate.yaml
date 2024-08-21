@@ -3,7 +3,7 @@ name: Call ECS Migration Task
 on:
   push:
     branches:
-      - master
+      - dev
 
 jobs:
   run-migrations:
@@ -30,5 +30,9 @@ jobs:
       - name: Run ECS Migration Task
         run: |
           source djangoenv
-          echo $EMAIL_HOST_USER
+          export AWS_REGION=$AWS_REGION_DEV
+          export AWS_CLUSTER_NAME=$AWS_MIGRATE_CLUSTER_NAME_DEV
+          export AWS_MIGRATE_TASK_DEF=$AWS_MIGRATE_TASK_DEF_DEV
+          export AWS_MIGRATE_SUBNETS=$AWS_MIGRATE_SUBNETS_DEV
+          export AWS_MIGRATE_SECURITY_GROUP=$AWS_MIGRATE_SECURITY_GROUP_DEV
           python migration_script/migrate.py

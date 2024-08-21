@@ -4,10 +4,33 @@ import boto3
 
 
 def verify_environment_variable(var_name):
-    if var_name not in os.environ:
+    var = os.getenv(var_name)
+    if var is None:
         print(f"Error: Environment variable {var_name} is not set.")
         exit(1)
-    return os.environ[var_name]
+    return var
+
+
+def launch_ecs_task(ecs_client, cluster, task_definition, subnets, security_group_id):
+    try:
+        response = ecs_client.run_task(
+            cluster=cluster,
+            taskDefinition=task_definition,
+            launchType='FARGATE',
+            networkConfiguration={
+                'awsvpcConfiguration': {
+                    'subnets': subnets,
+                    'securityGroups': [security_group_id],
+                    'assignPublicIp': 'DISABLED'
+                }
+            }
+        )
+    except Exception as e:
+        print(f"Error launching ECS task: {e}")
+        exit(1)
+    task_arn = response['tasks'][0]['taskArn']
+    print(f"Task launched: {task_arn}")
+    return task_arn.split('/')[-1]  # Extract the task ID from the ARN
 
 
 def check_task_status(ecs_client, cluster, task_id):
@@ -29,27 +52,38 @@ def wait_for_task_completion(ecs_client, cluster, task_id):
 
 
 def main():
-    print('Failing the migration')
-    print(os.environ['EMAIL_HOST_USER'])
-    exit(1)
-    # print("Verifying environment variables...")
-    # region = verify_environment_variable("REGION")
-    # cluster_name = verify_environment_variable("CLUSTER_NAME")
-    # task_id = verify_environment_variable("TASK_ID")
-    # ecs_client = boto3.client('ecs', region_name=region)
+    print("Verifying environment variables...")
+    region = verify_environment_variable("AWS_REGION")
+    cluster_name = verify_environment_variable("AWS_CLUSTER_NAME")
+    task_definition = verify_environment_variable("AWS_MIGRATE_TASK_DEF")
+    subnet_str = verify_environment_variable("AWS_MIGRATE_SUBNETS")
+    security_group_id = verify_environment_variable(
+        "AWS_MIGRATE_SECURITY_GROUP")
 
-    # print(f"Waiting for ECS task {task_id} to complete...")
-    # exit_code = wait_for_task_completion(ecs_client, cluster_name, task_id)
+    subnets = subnet_str.split(",")
+    ecs_client = boto3.client('ecs', region_name=region)
 
-    # if exit_code is None:
-    #     print("Error: ECS task did not return an exit code.")
-    #     exit(1)
+    print(f"Starting ECS Task")
+    task_id = launch_ecs_task(
+        ecs_client,
+        cluster_name,
+        task_definition,
+        subnets,
+        security_group_id
+    )
 
-    # if exit_code != 0:
-    #     print(f"ECS task failed with exit code {exit_code}")
-    #     exit(1)
+    print(f"Waiting for ECS task {task_id} to complete...")
+    exit_code = wait_for_task_completion(ecs_client, cluster_name, task_id)
 
-    # print("ECS task completed successfully.")
+    if exit_code is None:
+        print("Error: ECS task did not return an exit code.")
+        exit(1)
+
+    if exit_code != 0:
+        print(f"ECS task failed with exit code {exit_code}")
+        exit(1)
+
+    print("ECS task completed successfully.")
 
 
 if __name__ == "__main__":

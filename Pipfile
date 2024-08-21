@@ -16,6 +16,7 @@ gunicorn = "*"
 celery = "*"
 redis = "*"
 django-celery-beat = "*"
+psycopg2 = "*"
 
 [dev-packages]
 

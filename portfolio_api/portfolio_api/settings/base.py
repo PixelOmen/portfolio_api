@@ -146,7 +146,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_URL = '/static/'
 
 # Google Base Settings (redirect in dev/prod settings)
-SOCIAL_AUTH_GOOGLE_AUTHCODE_TOKEN_URL = env('GOOGLE_AUTHCODE_TOKEN_URL')
+SOCIAL_AUTH_GOOGLE_AUTHCODE_TOKEN_URL = 'https://oauth2.googleapis.com/token'
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('GOOGLE_OAUTH2_CLIENT_ID')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('GOOGLE_OAUTH2_CLIENT_SECRET')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
@@ -156,10 +156,20 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
 
 
 # User Limits
-ALLOWED_IMAGE_EXTENSIONS = env.list('ALLOWED_IMAGE_EXTENSIONS')
-MAX_IMAGE_SIZE = env.int('MAX_IMAGE_SIZE')
-MAX_USER_IMAGES = env.int('MAX_USER_IMAGES')
-MAX_POST_LENGTH = env.int('MAX_POST_LENGTH')
+ALLOWED_IMAGE_EXTENSIONS = [
+    "image/jpeg",
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/tiff",
+    "image/tiff",
+    "image/bmp",
+    "image/webp",
+    "image/svg+xml"
+]
+MAX_IMAGE_SIZE = 5242880
+MAX_USER_IMAGES = 200
+MAX_POST_LENGTH = 10
 
 
 # Email
