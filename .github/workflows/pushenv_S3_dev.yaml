@@ -1,0 +1,41 @@
+name: Push env to S3 (Dev)
+
+on:
+  workflow_call:
+    secrets:
+      aws_role:
+        required: true
+      aws_region:
+        required: true
+      env:
+        required: true
+      bucket:
+        required: true
+    inputs:
+      targetname:
+        required: true
+        type: string
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ROLE_ARN_DEV }}
+          aws-region: ${{ secrets.AWS_REGION_DEV }}
+
+      - name: Create and push env to S3
+        run: |
+          echo "${{ secrets.env }}" > envfile
+          source envfile
+          aws s3 cp envfile s3://${{ secrets.bucket }}/${{ inputs.targetname }}
