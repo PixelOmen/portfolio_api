@@ -31,8 +31,8 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_GITHUB_ROLE_ARN_DEV }}
-          aws-region: ${{ secrets.AWS_REGION_DEV }}
+          role-to-assume: ${{ secrets.aws_role }}
+          aws-region: ${{ secrets.aws_region }}
 
       - name: Create and push env to S3
         run: |
