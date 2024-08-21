@@ -1,9 +1,12 @@
-name: Build and Push to ECR
+name: Build and Push to ECR (Prod)
 
 on:
-  push:
-    branches:
-      - production
+  workflow_run:
+    workflows:
+      - 'migrate_prod'
+    types:
+      - completed      
+
 
 permissions:
   id-token: write

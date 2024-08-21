@@ -1,9 +1,11 @@
-name: Build and Push to ECR
+name: Build and Push to ECR (Staging)
 
 on:
-  push:
-    branches:
-      - staging
+  workflow_run:
+    workflows:
+      - 'migrate_staging'
+    types:
+      - completed 
 
 permissions:
   id-token: write
