@@ -11,27 +11,28 @@ permissions:
 
 
 jobs:
-  push_env:
-    runs-on: ubuntu-latest
-
+  get_env:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-                
+
       - name: Load environment
         run: |
           echo "${{ secrets.DJANGO_ENV }}" > djangoenv
           source djangoenv
-          echo "ENV_BUCKET=$AWS_S3_ENV_BUCKET_DEV" >> $GITHUB_ENV
+          echo "ENV_BUCKET=$AWS_S3_ENV_BUCKET_DEV" >> $GITHUB_OUTPUT
 
-      - name: Push env to S3
-        uses: ./.github/workflows/pushenv_S3_dev.yml
-        with:
-          aws_role: ${{ secrets.AWS_GITHUB_ROLE_ARN_DEV }}
-          aws_region: ${{ secrets.AWS_REGION_DEV }}
-          env: ${{ secrets.DJANGO_ENV }}
-          bucket: $ENV_BUCKET
-          targetname: django-celery.env
+  push_env:
+    needs: get_env
+    runs-on: ubuntu-latest
+    uses: ./.github/workflows/pushenv_S3_dev.yml
+    with:
+      aws_role: ${{ secrets.AWS_GITHUB_ROLE_ARN_DEV }}
+      aws_region: ${{ secrets.AWS_REGION_DEV }}
+      env: ${{ secrets.DJANGO_ENV }}
+      bucket: ${{ needs.get_env.outputs.ENV_BUCKET }}
+      targetname: django-celery.env
+
 
   deploy:
     needs: push_env
