@@ -171,6 +171,8 @@ MAX_IMAGE_SIZE = 5242880
 MAX_USER_IMAGES = 200
 MAX_POST_LENGTH = 10
 
+# Celery
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 # Email
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
