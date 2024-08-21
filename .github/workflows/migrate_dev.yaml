@@ -35,6 +35,10 @@ jobs:
         run: |
           source djangoenv
           export AWS_REGION=$AWS_REGION_DEV
+          export TEST=TESTVAR
+          echo 'testvar is'
+          echo $TEST
+          echo 'end testvar'
           echo 'region is'
           echo $AWS_REGION_DEV
           echo 'end region'          
