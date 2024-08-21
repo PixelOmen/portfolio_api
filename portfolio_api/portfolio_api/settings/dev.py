@@ -4,7 +4,11 @@ DEBUG = False
 
 SECRET_KEY = env("DJANGO_SECRET_KEY_DEV")
 
-ALLOWED_HOSTS = [".eacosta.dev", "eacosta.dev"]
+ALLOWED_HOSTS = [
+    ".eacosta.dev",
+    "eacosta.dev",
+    "eaportfolio-alb-dev-1082017843.us-west-2.elb.amazonaws.com",
+]
 
 CORS_ALLOWED_ORIGINS = [
     "https://eacosta.dev",
