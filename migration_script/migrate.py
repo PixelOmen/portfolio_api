@@ -11,7 +11,7 @@ def verify_environment_variable(var_name):
     return var
 
 
-def get_ecs_task_definition(ecs_client, task_definition_arn):
+def get_ecs_task_arn(ecs_client, task_definition_arn):
     try:
         response = ecs_client.describe_task_definition(
             taskDefinition=task_definition_arn
@@ -25,11 +25,11 @@ def get_ecs_task_definition(ecs_client, task_definition_arn):
     return task_arn
 
 
-def launch_ecs_task(ecs_client, cluster, task_definition, subnets, security_group_id):
+def launch_ecs_task(ecs_client, cluster, task_arn, subnets, security_group_id):
     try:
         response = ecs_client.run_task(
             cluster=cluster,
-            taskDefinition=task_definition,
+            taskDefinition=task_arn,
             launchType='FARGATE',
             networkConfiguration={
                 'awsvpcConfiguration': {
@@ -77,11 +77,14 @@ def main():
     subnets = subnet_str.split(",")
     ecs_client = boto3.client('ecs', region_name=region)
 
+    print("Getting ECS task arn...")
+    task_arn = get_ecs_task_arn(ecs_client, task_definition)
+
     print(f"Starting ECS Task")
     task_id = launch_ecs_task(
         ecs_client,
         cluster_name,
-        task_definition,
+        task_arn,
         subnets,
         security_group_id
     )
