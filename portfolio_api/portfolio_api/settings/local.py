@@ -6,8 +6,6 @@ DEBUG = True
 
 SECRET_KEY = env("DJANGO_SECRET_KEY_DEV")
 
-ALLOWED_HOSTS = ["*"]
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -24,12 +22,6 @@ DATABASES = {
 
 # DRFSO2
 SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = env("GOOGLE_OAUTH2_REDIRECT_URI_LOCAL")
-
-# CORS
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5173",
-    "http://localhost:5173",
-]
 
 # AWS S3 Media Storage
 AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID_LOCAL")
@@ -98,3 +90,13 @@ LOGGING = {
         },
     },
 }
+
+# ------ Allowed Hosts and CORS ------
+# Note: This is after logging because there is dynamic
+# ALLOWED_HOSTS configuration based on ECS container environment
+# in the other settings files that use logging and I want to keep it consistent.
+ALLOWED_HOSTS = ["*"]
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5173",
+    "http://localhost:5173",
+]

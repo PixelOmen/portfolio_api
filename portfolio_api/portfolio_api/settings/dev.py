@@ -1,20 +1,12 @@
+import os
 import sys
+import logging
+import requests
 from .base import *
 
 DEBUG = False
 
 SECRET_KEY = env("DJANGO_SECRET_KEY_DEV")
-
-ALLOWED_HOSTS = [
-    ".eacosta.dev",
-    "eacosta.dev",
-    "eaportfolio-alb-dev-1082017843.us-west-2.elb.amazonaws.com",
-]
-
-CORS_ALLOWED_ORIGINS = [
-    "https://eacosta.dev",
-    "https://dev.eacosta.dev",
-]
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -75,3 +67,30 @@ LOGGING = {
         },
     },
 }
+
+# Allowed Hosts and CORS
+ALLOWED_HOSTS = [
+    ".eacosta.dev",
+    "eacosta.dev",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "https://eacosta.dev",
+    "https://dev.eacosta.dev",
+]
+
+# Add the ECS container IP to allowed hosts
+# (Needs to be after logging to log dynamic hosts)
+django_logger = logging.getLogger("django")
+METADATA_URI = os.environ.get("ECS_CONTAINER_METADATA_URI")
+if METADATA_URI:
+    try:
+        container_metadata = requests.get(METADATA_URI).json()
+    except Exception as e:
+        django_logger.error(f"Error fetching container metadata: {e}")
+    else:
+        ALLOWED_HOSTS.append(container_metadata["Networks"][0]["IPv4Addresses"][0])
+else:
+    django_logger.warning(
+        "ECS_CONTAINER_METADATA_URI env var not set, make sure this is not an ECS task for the API"
+    )
