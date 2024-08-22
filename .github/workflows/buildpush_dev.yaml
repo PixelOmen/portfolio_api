@@ -38,7 +38,7 @@ jobs:
       targetname: django-celery.env
 
 
-  deploy:
+  build_and_push:
     needs: push_env
     runs-on: ubuntu-latest
 

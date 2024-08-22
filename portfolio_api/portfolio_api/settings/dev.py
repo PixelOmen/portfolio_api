@@ -22,6 +22,30 @@ DATABASES = {
     }
 }
 
+# DRFSO2
+SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = env("GOOGLE_OAUTH2_REDIRECT_URI_LOCAL")
+
+# AWS S3 Media Storage
+AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME_DEV")
+AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME_DEV")
+
+AWS_S3_FILE_OVERWRITE = False
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/"
+
+
+# Email
+EMAIL_PORTFOLIO_LINK = env("EMAIL_PORTFOLIO_LINK_DEV")
+EMAIL_LOGO_URL = env("EMAIL_LOGO_URL_DEV")
+
 # Celery
 CELERY_BROKER_URL = env("CELERY_BROKER_URL_DEV")
 CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND_DEV")
@@ -89,7 +113,15 @@ if METADATA_URI:
     except Exception as e:
         django_logger.error(f"Error fetching container metadata: {e}")
     else:
-        ALLOWED_HOSTS.append(container_metadata["Networks"][0]["IPv4Addresses"][0])
+        try:
+            container_ip = container_metadata["Networks"][0]["IPv4Addresses"][0]
+        except (KeyError, IndexError) as e:
+            django_logger.error(
+                f"Error parsing container IP address from metadata response: {e}"
+            )
+        else:
+            if container_ip not in ALLOWED_HOSTS:
+                ALLOWED_HOSTS.append(container_ip)
 else:
     django_logger.warning(
         "ECS_CONTAINER_METADATA_URI env var not set, make sure this is not an ECS task for the API"

@@ -1,0 +1,40 @@
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - 'Build and Push to ECR (Dev)'
+    types:
+      - completed
+
+permissions:
+  id-token: write
+  contents: read      
+
+jobs:
+  redeploy_tasks:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    needs: build_and_push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ROLE_ARN_DEV }}
+          aws-region: ${{ secrets.AWS_REGION_DEV }}
+
+      - name: Load env
+        run: |
+          echo "${{ secrets.DJANGO_ENV }}" > djangoenv
+
+      - name: Redeploy API service
+        run: |
+          source djangoenv
+          aws ecs update-service --cluster $AWS_TASK_CLUSTER_NAME_DEV --service $AWS_SERVICE_API_NAME_DEV --force-new-deployment
+
+      - name: Redeploy Celery worker service
+        run: |
+          source djangoenv
+          aws ecs update-service --cluster $AWS_TASK_CLUSTER_NAME_DEV --service $AWS_SERVICE_WORKER_NAME_DEV --force-new-deployment          
