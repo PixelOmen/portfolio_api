@@ -21,7 +21,7 @@ permissions:
   contents: read
 
 jobs:
-  deploy:
+  push_env:
     runs-on: ubuntu-latest
 
     steps:

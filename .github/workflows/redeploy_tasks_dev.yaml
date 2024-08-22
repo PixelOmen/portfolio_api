@@ -13,7 +13,6 @@ permissions:
 jobs:
   redeploy_tasks:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    needs: build_and_push
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
