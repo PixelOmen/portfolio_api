@@ -74,20 +74,25 @@ LOGGING = {
         "level": "WARNING",
     },
     "loggers": {
+        "googleauth": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
         "django": {
             "handlers": ["console"],
             "level": "INFO",
-            "propagate": True,
+            "propagate": False,
         },
         "celery": {
             "handlers": ["console"],
             "level": "INFO",
-            "propagate": True,
+            "propagate": False,
         },
         "celery.beat": {
             "handlers": ["console"],
             "level": "INFO",
-            "propagate": True,
+            "propagate": False,
         },
     },
 }

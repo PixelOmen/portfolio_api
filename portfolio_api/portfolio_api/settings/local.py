@@ -7,7 +7,6 @@ DEBUG = True
 SECRET_KEY = env("DJANGO_SECRET_KEY_DEV")
 
 # Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
     "default": {
@@ -73,20 +72,25 @@ LOGGING = {
         "level": "WARNING",
     },
     "loggers": {
+        "googleauth": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
         "django": {
             "handlers": ["console"],
             "level": "INFO",
-            "propagate": True,
+            "propagate": False,
         },
         "celery": {
             "handlers": ["console"],
             "level": "INFO",
-            "propagate": True,
+            "propagate": False,
         },
         "celery.beat": {
             "handlers": ["console"],
             "level": "INFO",
-            "propagate": True,
+            "propagate": False,
         },
     },
 }
