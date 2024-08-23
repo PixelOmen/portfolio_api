@@ -12,7 +12,6 @@ logger = logging.getLogger("googleauth")
 
 class GoogleAuthToTokenView(APIView):
     def post(self, request):
-        logger.debug(f"GoogleAuthToTokenView POST request: {request.data}")
         code = request.data.get("code")
         client_id = settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY
         client_secret = settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
@@ -37,6 +36,7 @@ class GoogleAuthToTokenView(APIView):
             logger.error(
                 f"Failed to obtain Google access token. Response: {token_res_json}"
             )
+            logger.error(f"GoogleAuthToTokenView POST request: {request.data}")
             return Response(
                 {"error": "Failed to obtain Google access token"},
                 status=status.HTTP_400_BAD_REQUEST,
