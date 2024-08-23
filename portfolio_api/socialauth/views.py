@@ -37,6 +37,7 @@ class GoogleAuthToTokenView(APIView):
                 f"Failed to obtain Google access token. Response: {token_res_json}"
             )
             logger.error(f"GoogleAuthToTokenView POST request: {request.data}")
+            logger.error(f"redirect_uri: {redirect_uri}")
             return Response(
                 {"error": "Failed to obtain Google access token"},
                 status=status.HTTP_400_BAD_REQUEST,
