@@ -28,12 +28,16 @@ class GoogleAuthToTokenView(APIView):
         }
 
         token_response = requests.post(token_url, data=token_data)
-        token_json = token_response.json()
-        access_token = token_json.get("access_token")
+        token_res_json = token_response.json()
+        access_token = token_res_json.get("access_token")
 
         if access_token:
             return Response({"access_token": access_token}, status=status.HTTP_200_OK)
-        return Response(
-            {"error": "Failed to obtain Google access token"},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+        else:
+            logger.error(
+                f"Failed to obtain Google access token. Response: {token_res_json}"
+            )
+            return Response(
+                {"error": "Failed to obtain Google access token"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
