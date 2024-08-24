@@ -118,6 +118,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://dev.eacosta.dev",
 ]
 
+CSRF_TRUSTED_ORIGINS = ["https://dev.eacosta.dev"]
+
 # Add the ECS container IP to allowed hosts
 # (Needs to be after logging to log dynamic hosts)
 django_logger = logging.getLogger("django")

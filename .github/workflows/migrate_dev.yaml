@@ -3,7 +3,7 @@ name: Call ECS Migration Task (Dev)
 on:
   workflow_run:
     workflows:
-      - 'Redeploy ECS tasks (Dev)'
+      - 'Build and Push to ECR (Dev)'
     types:
       - completed
 

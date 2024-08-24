@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   workflow_run:
     workflows:
-      - 'Build and Push to ECR (Dev)'
+      - 'Call ECS Migration Task (Dev)'
     types:
       - completed
 
