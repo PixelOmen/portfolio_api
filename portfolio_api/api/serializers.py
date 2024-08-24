@@ -3,6 +3,31 @@ from rest_framework import serializers
 from . import models
 
 
+class AllowedImageMimeTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.AllowedImageMimeType
+        fields = ["name"]
+        read_only_fields = ["id"]
+
+
+class UserLimitsSerializer(serializers.ModelSerializer):
+    allowed_image_mimes = serializers.SlugRelatedField(
+        many=True,
+        queryset=models.AllowedImageMimeType.objects.all(),
+        slug_field="name",
+    )
+
+    class Meta:
+        model = models.UserLimits
+        fields = [
+            "max_image_size",
+            "max_user_images",
+            "max_post_length",
+            "allowed_image_mimes",
+        ]
+        read_only_fields = ["id"]
+
+
 class UserPostSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     date_posted = serializers.DateTimeField(read_only=True)
@@ -11,7 +36,7 @@ class UserPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.UserPost
-        fields = ['id', 'content', 'date_posted', 'date_modified', 'owner']
+        fields = ["id", "content", "date_posted", "date_modified", "owner"]
 
 
 class UserImageSerializer(serializers.ModelSerializer):
@@ -21,7 +46,7 @@ class UserImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.UserImage
-        fields = ['id', 'image', 'date_posted', 'owner']
+        fields = ["id", "image", "date_posted", "owner"]
 
 
 class AnonMessageSerializer(serializers.ModelSerializer):
@@ -30,4 +55,4 @@ class AnonMessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.AnonMessage
-        fields = ['id', 'name', 'email', 'content', 'date_posted']
+        fields = ["id", "name", "email", "content", "date_posted"]

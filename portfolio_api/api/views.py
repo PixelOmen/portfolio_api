@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.utils import timezone
 
 from rest_framework.views import APIView
@@ -12,16 +11,13 @@ from .throttling import AnonMessageThrottle, UserImageThrottle
 
 
 # ------------ Utility endpoints ------------
-class ServerLimitsView(APIView):
-    """ Server limits for the Frontend, not enforced by the API """
+class UserLimitsView(APIView):
+    """Server limits for the Frontend, not enforced by the API"""
 
     def get(self, _):
-        return Response({
-            'max_image_size': settings.MAX_IMAGE_SIZE,
-            'max_user_images': settings.MAX_USER_IMAGES,
-            'max_post_length': settings.MAX_POST_LENGTH,
-            'allowed_image_extensions': settings.ALLOWED_IMAGE_EXTENSIONS,
-        })
+        user_limits = models.UserLimits.objects.get(name="default")
+        serializer = serializers.UserLimitsSerializer(user_limits)
+        return Response(serializer.data)
 
 
 class TokenTestView(APIView):
@@ -29,15 +25,17 @@ class TokenTestView(APIView):
     Endpoint to simply test if the user is authenticated and
     send an email when they first associate their account.
     """
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         if request.user.email and not request.user.welcome_email_sent:
             tasks.send_welcome_email_task.delay(
-                request.user.first_name, request.user.email)  # type: ignore
+                request.user.first_name, request.user.email
+            )  # type: ignore
             request.user.welcome_email_sent = True
             request.user.save()
-        return Response({'details': 'You are authenticated!'})
+        return Response({"details": "You are authenticated!"})
 
 
 # ----------- Anon User Endpoints ------------
@@ -51,12 +49,10 @@ class AnonMessageViewSet(APIView):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
-# ----------- Auth User Endpoints ------------
 
+# ----------- Auth User Endpoints ------------
 # Note: PermissionDenied exceptions are not needed because
 # querysets are filtered by owner but it is an extra layer of security.
-
-
 class UserPostViewSet(ModelViewSet):
     serializer_class = serializers.UserPostSerializer
     permission_classes = [IsAuthenticated]
@@ -67,8 +63,7 @@ class UserPostViewSet(ModelViewSet):
     def get_object(self):
         obj = super().get_object()
         if obj.owner != self.request.user:
-            raise PermissionDenied(
-                "You do not have permission to access this Post")
+            raise PermissionDenied("You do not have permission to access this Post")
         return obj
 
     def perform_create(self, serializer):
@@ -76,15 +71,13 @@ class UserPostViewSet(ModelViewSet):
 
     def perform_update(self, serializer):
         if serializer.instance.owner != self.request.user:
-            raise PermissionDenied(
-                "You do not have permission to edit this Post")
+            raise PermissionDenied("You do not have permission to edit this Post")
         serializer.save(owner=self.request.user)
         serializer.save(date_modified=timezone.now())
 
     def perform_destroy(self, instance):
         if instance.owner != self.request.user:
-            raise PermissionDenied(
-                "You do not have permission to delete this Post")
+            raise PermissionDenied("You do not have permission to delete this Post")
         instance.delete()
 
 
@@ -93,7 +86,7 @@ class UserImageViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_throttles(self):
-        if self.request.method == 'POST':
+        if self.request.method == "POST":
             return [UserImageThrottle()]
         return super().get_throttles()
 
@@ -103,8 +96,7 @@ class UserImageViewSet(ModelViewSet):
     def get_object(self):
         obj = super().get_object()
         if obj.owner != self.request.user:
-            raise PermissionDenied(
-                "You do not have permission to access this Image")
+            raise PermissionDenied("You do not have permission to access this Image")
         return obj
 
     def perform_create(self, serializer):
@@ -115,7 +107,6 @@ class UserImageViewSet(ModelViewSet):
 
     def perform_destroy(self, instance):
         if instance.owner != self.request.user:
-            raise PermissionDenied(
-                "You do not have permission to delete this Image")
+            raise PermissionDenied("You do not have permission to delete this Image")
         instance.image.delete(save=False)
         instance.delete()
