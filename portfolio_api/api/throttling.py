@@ -1,16 +1,31 @@
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 
 
-class AnonMessageThrottle(AnonRateThrottle):
+class AnonBurstRateThrottle(AnonRateThrottle):
+    rate = "10/min"
+    scope = "burst_anon"
+
+
+class AnonDailyThrottle(AnonRateThrottle):
+    rate = "100/day"
     scope = "anon_message"
 
 
-class UserImageThrottle(UserRateThrottle):
-    scope = "user_image"
+class UserBurstPostThrottle(UserRateThrottle):
+    rate = "1/sec"
+    scope = "burst_user_post_trx"
 
-    def allow_request(self, request, view):
-        self.request = request  # Save the request to use in get_rate
-        return super().allow_request(request, view)
 
-    def get_rate(self):
-        return super().get_rate()
+class UserDailyPostThrottle(UserRateThrottle):
+    rate = "200/day"
+    scope = "burst_user_post_trx"
+
+
+class UserBurstImageThrottle(UserRateThrottle):
+    rate = "20/min"
+    scope = "burst_user_image_trx"
+
+
+class UserDailyImageThrottle(UserRateThrottle):
+    rate = "50/day"
+    scope = "user_image_trx"

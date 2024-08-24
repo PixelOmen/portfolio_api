@@ -7,7 +7,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied, MethodNotAllowed
 
 from . import models, serializers, tasks
-from .throttling import AnonMessageThrottle, UserImageThrottle
+from .throttling import (
+    AnonDailyThrottle,
+    AnonBurstRateThrottle,
+    UserDailyImageThrottle,
+    UserBurstImageThrottle,
+    UserBurstPostThrottle,
+)
 
 
 # ------------ Utility endpoints ------------
@@ -40,7 +46,11 @@ class TokenTestView(APIView):
 
 # ----------- Anon User Endpoints ------------
 class AnonMessageViewSet(APIView):
-    throttle_classes = [AnonMessageThrottle]
+    throttle_classes = [
+        AnonDailyThrottle,
+        AnonBurstRateThrottle,
+        UserBurstPostThrottle,
+    ]
 
     def post(self, request):
         serializer = serializers.AnonMessageSerializer(data=request.data)
@@ -51,14 +61,20 @@ class AnonMessageViewSet(APIView):
 
 
 # ----------- Auth User Endpoints ------------
-# Note: PermissionDenied exceptions are not needed because
-# querysets are filtered by owner but it is an extra layer of security.
+# Note: PermissionDenied exceptions are not really needed,
+# querysets are filtered by owner, but why not?
 class UserPostViewSet(ModelViewSet):
     serializer_class = serializers.UserPostSerializer
     permission_classes = [IsAuthenticated]
+    throttle_classes = [UserBurstPostThrottle]
 
     def get_queryset(self):
         return models.UserPost.objects.filter(owner=self.request.user)
+
+    def get_throttles(self):
+        if self.request.method == "POST":
+            return super().get_throttles()
+        return []
 
     def get_object(self):
         obj = super().get_object()
@@ -84,11 +100,12 @@ class UserPostViewSet(ModelViewSet):
 class UserImageViewSet(ModelViewSet):
     serializer_class = serializers.UserImageSerializer
     permission_classes = [IsAuthenticated]
+    throttle_classes = [UserDailyImageThrottle, UserBurstImageThrottle]
 
     def get_throttles(self):
         if self.request.method == "POST":
-            return [UserImageThrottle()]
-        return super().get_throttles()
+            return super().get_throttles()
+        return []
 
     def get_queryset(self):
         return models.UserImage.objects.filter(owner=self.request.user)

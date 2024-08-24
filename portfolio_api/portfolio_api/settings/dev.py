@@ -42,16 +42,26 @@ STORAGES = {
 MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/"
 
 
-# Email
-EMAIL_PORTFOLIO_LINK = env("EMAIL_PORTFOLIO_LINK_DEV")
-EMAIL_LOGO_URL = env("EMAIL_LOGO_URL_DEV")
+# Caches
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": env("DJANGO_CACHE_DEV"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
+}
 
 # Celery
 CELERY_BROKER_URL = env("CELERY_BROKER_URL_DEV")
 CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND_DEV")
 
-# Logging
+# Email
+EMAIL_PORTFOLIO_LINK = env("EMAIL_PORTFOLIO_LINK_DEV")
+EMAIL_LOGO_URL = env("EMAIL_LOGO_URL_DEV")
 
+# Logging
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,

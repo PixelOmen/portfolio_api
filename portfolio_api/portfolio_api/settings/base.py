@@ -118,13 +118,25 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
         "drf_social_oauth2.authentication.SocialAuthentication",
-    ),
-    "DEFAULT_THROTTLE_RATES": {
-        "anon": "1000/day",
-        "user": "1000/day",
-        "anon_message": "50/min",
-        "user_image": "30/day",
-    },
+    )
+}
+
+# User Limits
+USER_LIMITS = {
+    "DEFAULT_ALLOWED_IMAGE_MIMES": [
+        "image/jpeg",
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/tiff",
+        "image/tiff",
+        "image/bmp",
+        "image/webp",
+        "image/svg+xml",
+    ],
+    "DEFAULT_MAX_IMAGE_SIZE": 5242880,
+    "DEFAULT_MAX_USER_IMAGES": 10,
+    "DEFAULT_MAX_POST_LENGTH": 200,
 }
 
 AUTHENTICATION_BACKENDS = (
@@ -146,24 +158,6 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     "https://www.googleapis.com/auth/userinfo.profile",
 ]
 
-
-# User Limits
-USER_LIMITS = {
-    "DEFAULT_ALLOWED_IMAGE_MIMES": [
-        "image/jpeg",
-        "image/jpeg",
-        "image/png",
-        "image/gif",
-        "image/tiff",
-        "image/tiff",
-        "image/bmp",
-        "image/webp",
-        "image/svg+xml",
-    ],
-    "DEFAULT_MAX_IMAGE_SIZE": 5242880,
-    "DEFAULT_MAX_USER_IMAGES": 200,
-    "DEFAULT_MAX_POST_LENGTH": 10,
-}
 
 # Superuser
 DEFAULT_SUPERUSER_USERNAME = env("DJANGO_DEFAULT_SUPERUSER_USERNAME")
