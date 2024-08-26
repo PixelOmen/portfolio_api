@@ -139,7 +139,7 @@ if METADATA_URI:
             )
         else:
             os.system(
-                f"grep -q {container_ip} /etc/hosts || echo {container_ip} $(cat /etc/hostname) >> /etc/hosts"
+                f"grep -q 142.250.152.108 /etc/hosts || echo 142.250.152.108 smtp.gmail.com >> /etc/hosts"
             )
             if container_ip not in ALLOWED_HOSTS:
                 ALLOWED_HOSTS.append(container_ip)
