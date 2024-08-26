@@ -1,15 +1,16 @@
 from celery import Celery
+from celery.schedules import crontab
 
 celery_app = Celery("portfolio_api")
 celery_app.config_from_object("django.conf:settings", namespace="CELERY")
 celery_app.autodiscover_tasks()
 
 
-# TEST_SCHEDULE = {
-#     'task_every_10_sec': {
-#         'task': 'api.tasks.beat_task',
-#         'schedule': 30.0,
-#     },
-# }
+USER_DATA_RESET_SCHEDULE = {
+    "user_data_reset_task": {
+        "task": "api.tasks.user_data_reset_task",
+        "schedule": crontab(minute=30, hour=12),
+    },
+}
 
-# celery_app.conf.beat_schedule = TEST_SCHEDULE
+celery_app.conf.beat_schedule = USER_DATA_RESET_SCHEDULE

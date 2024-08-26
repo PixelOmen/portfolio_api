@@ -18,6 +18,7 @@ redis = "*"
 django-celery-beat = "*"
 psycopg2 = "*"
 django-redis = "*"
+django-ses = "*"
 
 [dev-packages]
 

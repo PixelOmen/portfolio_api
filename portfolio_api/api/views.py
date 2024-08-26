@@ -36,9 +36,10 @@ class TokenTestView(APIView):
 
     def get(self, request):
         if request.user.email and not request.user.welcome_email_sent:
-            tasks.send_welcome_email_task.delay(
-                request.user.first_name, request.user.email
-            )  # type: ignore
+            # Waiting for SES to be approved
+            # tasks.send_welcome_email_task.delay(
+            #     request.user.first_name, request.user.email
+            # )  # type: ignore
             request.user.welcome_email_sent = True
             request.user.save()
         return Response({"details": "You are authenticated!"})

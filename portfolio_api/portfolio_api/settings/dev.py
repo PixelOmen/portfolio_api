@@ -138,9 +138,6 @@ if METADATA_URI:
                 f"Error parsing container IP address from metadata response: {e}"
             )
         else:
-            os.system(
-                f"grep -q 142.250.152.108 /etc/hosts || echo 142.250.152.108 smtp.gmail.com >> /etc/hosts"
-            )
             if container_ip not in ALLOWED_HOSTS:
                 ALLOWED_HOSTS.append(container_ip)
 else:

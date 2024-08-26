@@ -1,16 +1,20 @@
 import logging
 from celery import shared_task
 
-from . import email
+from . import email, models
 
 
 LOGGER = logging.getLogger("celery")
 
 
 @shared_task
-def beat_task():
-    logging.info("Beat Task")
-    return "Beat Task Done"
+def user_data_reset_task():
+    LOGGER.info("Resetting User Data")
+    for img in models.UserImage.objects.all():
+        img.image.delete(save=False)
+        img.delete()
+    models.UserPost.objects.all().delete()
+    return "User Data Reset"
 
 
 @shared_task()
