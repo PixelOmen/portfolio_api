@@ -4,13 +4,17 @@ from celery import shared_task
 from . import email
 
 
+LOGGER = logging.getLogger("celery")
+
+
 @shared_task
 def beat_task():
     logging.info("Beat Task")
     return "Beat Task Done"
 
 
-@shared_task(bind=True)
-def send_welcome_email_task(self, username: str, user_email: str):
+@shared_task()
+def send_welcome_email_task(username: str, user_email: str):
+    LOGGER.info(f"Sending Welcome Email to {user_email}")
     email.send_welcome_email(username, user_email)
     return f"Welcome Email sent"

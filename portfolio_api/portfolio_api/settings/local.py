@@ -96,12 +96,12 @@ LOGGING = {
         "celery": {
             "handlers": ["console"],
             "level": "INFO",
-            "propagate": False,
+            "propagate": True,
         },
         "celery.beat": {
             "handlers": ["console"],
             "level": "INFO",
-            "propagate": False,
+            "propagate": True,
         },
     },
 }
