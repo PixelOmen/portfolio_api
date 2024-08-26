@@ -127,6 +127,7 @@ METADATA_URI = os.environ.get("ECS_CONTAINER_METADATA_URI")
 if METADATA_URI:
     try:
         container_metadata = requests.get(METADATA_URI).json()
+
     except Exception as e:
         django_logger.error(f"Error fetching container metadata: {e}")
     else:
@@ -137,6 +138,9 @@ if METADATA_URI:
                 f"Error parsing container IP address from metadata response: {e}"
             )
         else:
+            os.system(
+                f"grep -q {container_ip} /etc/hosts || echo {container_ip} $(cat /etc/hostname) >> /etc/hosts"
+            )
             if container_ip not in ALLOWED_HOSTS:
                 ALLOWED_HOSTS.append(container_ip)
 else:
