@@ -9,7 +9,7 @@ celery_app.autodiscover_tasks()
 USER_DATA_RESET_SCHEDULE = {
     "user_data_reset_task": {
         "task": "api.tasks.user_data_reset_task",
-        "schedule": crontab(minute=45, hour=12),
+        "schedule": crontab(minute=00, hour=13),
     },
 }
 
