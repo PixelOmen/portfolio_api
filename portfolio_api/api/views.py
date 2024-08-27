@@ -39,9 +39,6 @@ class TokenTestView(APIView):
             tasks.send_welcome_email_task.delay(
                 request.user.first_name, request.user.email
             )  # type: ignore
-            tasks.send_welcome_email_task(
-                request.user.first_name, request.user.email
-            )  # type: ignore
             request.user.welcome_email_sent = True
             request.user.save()
         return Response({"details": "You are authenticated!"})
