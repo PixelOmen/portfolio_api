@@ -36,10 +36,9 @@ class TokenTestView(APIView):
 
     def get(self, request):
         if request.user.email and not request.user.welcome_email_sent:
-            # Waiting for SES to be approved
-            # tasks.send_welcome_email_task.delay(
-            #     request.user.first_name, request.user.email
-            # )  # type: ignore
+            tasks.send_welcome_email_task.delay(
+                request.user.first_name, request.user.email
+            )  # type: ignore
             request.user.welcome_email_sent = True
             request.user.save()
         return Response({"details": "You are authenticated!"})
@@ -70,7 +69,9 @@ class UserPostViewSet(ModelViewSet):
     throttle_classes = [UserBurstPostThrottle]
 
     def get_queryset(self):
-        return models.UserPost.objects.filter(owner=self.request.user)
+        return models.UserPost.objects.filter(owner=self.request.user).order_by(
+            "date_posted"
+        )
 
     def get_throttles(self):
         if self.request.method == "POST":
