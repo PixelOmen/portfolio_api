@@ -22,7 +22,7 @@ jobs:
       - name: Load environment
         id: load_env
         run: |
-          echo "${{ secrets.DJANGO_ENV }}" > djangoenv
+          echo "${{ secrets.ENCODED_DJANGO_ENV }}" | base64 --decode > djangoenv
           source djangoenv
           echo "ENV_BUCKET=$AWS_S3_ENV_BUCKET_DEV" >> $GITHUB_OUTPUT
 
@@ -54,7 +54,7 @@ jobs:
 
       - name: Create and push env to S3
         run: |
-          echo "${{ secrets.DJANGO_ENV }}" > djangoenv
+          echo "${{ secrets.ENCODED_DJANGO_ENV }}" | base64 --decode > djangoenv
           source djangoenv
           aws s3 cp djangoenv s3://$AWS_S3_ENV_BUCKET_DEV/django-celery.env
 

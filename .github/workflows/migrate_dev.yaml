@@ -37,7 +37,7 @@ jobs:
         
       - name: Load environment variables
         run: |
-          echo "${{ secrets.DJANGO_ENV }}" > djangoenv
+          echo "${{ secrets.ENCODED_DJANGO_ENV }}" | base64 --decode > djangoenv
           
       - name: Run ECS Migration Task
         run: |

@@ -28,7 +28,7 @@ jobs:
 
       - name: Load env
         run: |
-          echo "${{ secrets.DJANGO_ENV }}" > djangoenv
+          echo "${{ secrets.ENCODED_DJANGO_ENV }}" | base64 --decode > djangoenv
 
       - name: Redeploy API service
         run: |
