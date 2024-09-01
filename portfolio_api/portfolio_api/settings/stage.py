@@ -6,7 +6,7 @@ from .base import *
 
 DEBUG = False
 
-SECRET_KEY = env("DJANGO_SECRET_KEY_DEV")
+SECRET_KEY = env("DJANGO_SECRET_KEY_STAGE")
 
 # Database
 
@@ -16,17 +16,17 @@ DATABASES = {
         "NAME": env("POSTGRES_DB_NAME"),
         "USER": env("POSTGRES_DB_USER"),
         "PASSWORD": env("POSTGRES_DB_PASSWORD"),
-        "HOST": env("POSTGRES_DB_HOST_DEV"),
+        "HOST": env("POSTGRES_DB_HOST_STAGE"),
         "PORT": env("POSTGRES_DB_PORT"),
     }
 }
 
 # DRFSO2
-SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = env("GOOGLE_OAUTH2_REDIRECT_URI_DEV")
+SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = env("GOOGLE_OAUTH2_REDIRECT_URI_STAGE")
 
 # AWS S3 Media Storage
-AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME_DEV")
-AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME_DEV")
+AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME_STAGE")
+AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME_STAGE")
 
 AWS_S3_FILE_OVERWRITE = False
 
@@ -40,12 +40,11 @@ STORAGES = {
 }
 MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/"
 
-
 # Caches
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": env("DJANGO_CACHE_DEV"),
+        "LOCATION": env("DJANGO_CACHE_STAGE"),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
@@ -53,12 +52,12 @@ CACHES = {
 }
 
 # Celery
-CELERY_BROKER_URL = env("CELERY_BROKER_URL_DEV")
-CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND_DEV")
+CELERY_BROKER_URL = env("CELERY_BROKER_URL_STAGE")
+CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND_STAGE")
 
 # Email
-EMAIL_PORTFOLIO_LINK = env("EMAIL_PORTFOLIO_LINK_DEV")
-EMAIL_LOGO_URL = env("EMAIL_LOGO_URL_DEV")
+EMAIL_PORTFOLIO_LINK = env("EMAIL_PORTFOLIO_LINK_STAGE")
+EMAIL_LOGO_URL = env("EMAIL_LOGO_URL_STAGE")
 
 # Logging
 LOGGING = {
@@ -114,10 +113,10 @@ ALLOWED_HOSTS = [
 
 CORS_ALLOWED_ORIGINS = [
     "https://eacosta.dev",
-    "https://dev.eacosta.dev",
+    "https://stage.eacosta.dev",
 ]
 
-CSRF_TRUSTED_ORIGINS = ["https://dev.eacosta.dev"]
+CSRF_TRUSTED_ORIGINS = ["https://stage.eacosta.dev"]
 
 # Add the ECS container IP to allowed hosts
 # (Needs to be after logging to log dynamic hosts)

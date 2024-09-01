@@ -1,0 +1,47 @@
+name: Redeploy ECS tasks (Stage)
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - 'Call ECS Migration Task (Stage)'
+    types:
+      - completed
+
+permissions:
+  id-token: write
+  contents: read      
+
+jobs:
+  redeploy_tasks:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ROLE_ARN_STAGE }}
+          aws-region: ${{ secrets.AWS_REGION_STAGE }}
+
+      - name: Load env
+        run: |
+          echo "${{ secrets.ENCODED_DJANGO_ENV }}" | base64 --decode > djangoenv
+
+      - name: Redeploy API service
+        run: |
+          source djangoenv
+          aws ecs update-service --cluster $AWS_TASK_CLUSTER_NAME_STAGE --service $AWS_SERVICE_API_NAME_STAGE --force-new-deployment
+
+      - name: Redeploy Celery worker service
+        run: |
+          source djangoenv
+          aws ecs update-service --cluster $AWS_TASK_CLUSTER_NAME_STAGE --service $AWS_SERVICE_WORKER_NAME_STAGE --force-new-deployment
+
+      - name: Redeploy Celery beat service
+        run: |
+          source djangoenv
+          aws ecs update-service --cluster $AWS_TASK_CLUSTER_NAME_STAGE --service $AWS_SERVICE_BEAT_NAME_STAGE --force-new-deployment          
+

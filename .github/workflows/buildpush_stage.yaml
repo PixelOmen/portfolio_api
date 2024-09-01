@@ -1,9 +1,9 @@
-name: Build and Push to ECR (Dev)
+name: Build and Push to ECR (Stage)
 
 on:
   push:
     branches:
-      - dev
+      - stage
 
 permissions:
   id-token: write
@@ -24,14 +24,14 @@ jobs:
         run: |
           echo "${{ secrets.ENCODED_DJANGO_ENV }}" | base64 --decode > djangoenv
           source djangoenv
-          echo "ENV_BUCKET=$AWS_S3_ENV_BUCKET_DEV" >> $GITHUB_OUTPUT
+          echo "ENV_BUCKET=$AWS_S3_ENV_BUCKET_STAGE" >> $GITHUB_OUTPUT
 
   push_env:
     needs: get_env
     uses: ./.github/workflows/pushenv_S3_reusable.yaml
     secrets:
-      aws_role: ${{ secrets.AWS_GITHUB_ROLE_ARN_DEV }}
-      aws_region: ${{ secrets.AWS_REGION_DEV }}
+      aws_role: ${{ secrets.AWS_GITHUB_ROLE_ARN_STAGE }}
+      aws_region: ${{ secrets.AWS_REGION_STAGE }}
       env: ${{ secrets.DJANGO_ENV }}
       bucket: ${{ needs.get_env.outputs.ENV_BUCKET }}
     with:
@@ -49,26 +49,26 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_GITHUB_ROLE_ARN_DEV }}
-          aws-region: ${{ secrets.AWS_REGION_DEV }}
+          role-to-assume: ${{ secrets.AWS_GITHUB_ROLE_ARN_STAGE }}
+          aws-region: ${{ secrets.AWS_REGION_STAGE }}
 
       - name: Create and push env to S3
         run: |
           echo "${{ secrets.ENCODED_DJANGO_ENV }}" | base64 --decode > djangoenv
           source djangoenv
-          aws s3 cp djangoenv s3://$AWS_S3_ENV_BUCKET_DEV/django-celery.env
+          aws s3 cp djangoenv s3://$AWS_S3_ENV_BUCKET_STAGE/django-celery.env
 
       - name: Log in to Amazon ECR
         run: |
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION_DEV }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION_DEV }}.amazonaws.com
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION_STAGE }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION_STAGE }}.amazonaws.com
 
       - name: Build Docker image
         working-directory: ./portfolio_api
         run: docker build -t eaportfolio-django:latest .
 
       - name: Tag Docker image
-        run: docker tag eaportfolio-django:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION_DEV }}.amazonaws.com/${{ secrets.AWS_ECR_REPO_DEV }}:latest
+        run: docker tag eaportfolio-django:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION_STAGE }}.amazonaws.com/${{ secrets.AWS_ECR_REPO_STAGE }}:latest
 
       - name: Push Docker image to ECR
-        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION_DEV }}.amazonaws.com/${{ secrets.AWS_ECR_REPO_DEV }}:latest
+        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION_STAGE }}.amazonaws.com/${{ secrets.AWS_ECR_REPO_STAGE }}:latest
         
