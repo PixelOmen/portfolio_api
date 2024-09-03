@@ -19,6 +19,9 @@ django-celery-beat = "*"
 psycopg2 = "*"
 django-redis = "*"
 django-ses = "*"
+channels = "*"
+channels-redis = "*"
+uvicorn = "*"
 
 [dev-packages]
 
