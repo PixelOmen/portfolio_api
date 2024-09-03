@@ -52,6 +52,17 @@ CACHES = {
     },
 }
 
+# Channels
+CL_HOST, CL_PORT, CL_DB = env("CHANNEL_LAYERS_REDIS_LOCAL").split(":")
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(CL_HOST, int(CL_PORT), int(CL_DB))],
+        },
+    },
+}
+
 # Celery
 CELERY_BROKER_URL = env("CELERY_BROKER_URL_LOCAL")
 CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND_LOCAL")

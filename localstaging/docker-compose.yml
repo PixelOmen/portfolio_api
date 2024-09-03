@@ -69,4 +69,5 @@ services:
     volumes:
       - ../portfolio_api:/app
     # command: sh -c "python manage.py collectstatic --noinput && python manage.py makemigrations && python manage.py migrate && python manage.py seed_defaults && gunicorn portfolio_api.wsgi:application --bind 0.0.0.0:8000 --workers 3"
-    command: sh -c "python manage.py collectstatic --noinput && python manage.py migrate && python manage.py seed_defaults && python manage.py runserver 0.0.0.0:8000"
+    command: sh -c "python manage.py collectstatic --noinput && python manage.py makemigrations && python manage.py migrate && python manage.py seed_defaults && gunicorn -k uvicorn.workers.UvicornWorker portfolio_api.asgi:application --bind 0.0.0.0:8000 --workers 3"
+    # command: sh -c "python manage.py collectstatic --noinput && python manage.py makemigrations && python manage.py migrate && python manage.py seed_defaults && python manage.py runserver 0.0.0.0:8000"
