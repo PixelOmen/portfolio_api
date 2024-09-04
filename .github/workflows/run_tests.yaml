@@ -1,4 +1,4 @@
-name: Build and Push to ECR (Stage)
+name: Run Django Tests
 
 on:
   workflow_dispatch:
