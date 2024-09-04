@@ -1,7 +1,9 @@
-name: Run Django Tests
+name: Run Django Tests (Stage)
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - stage
 
 jobs:
   run_tests:

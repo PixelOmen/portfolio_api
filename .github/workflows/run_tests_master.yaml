@@ -1,0 +1,29 @@
+name: Run Django Tests (Master)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create env file
+        working-directory: ./localstaging
+        run: |
+          echo "${{ secrets.ENCODED_DJANGO_ENV }}" | base64 --decode > .env
+
+      - name: Build Docker Compose
+        working-directory: ./localstaging
+        run: docker compose build
+
+      - name: Run Docker Compose
+        working-directory: ./localstaging
+        run: docker compose up -d
+
+      - name: Run tests
+        working-directory: ./localstaging
+        run: |
+          docker compose exec django python manage.py test
