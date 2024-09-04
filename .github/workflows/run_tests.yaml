@@ -1,0 +1,23 @@
+name: Build and Push to ECR (Stage)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker Compose
+        working-directory: ./localstaging
+        run: docker compose build
+
+      - name: Run Docker Compose
+        working-directory: ./localstaging
+        run: docker compose up -d
+
+      - name: Run tests
+        run: |
+          docker compose exec django python manage.py test
