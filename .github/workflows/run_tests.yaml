@@ -10,6 +10,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Create env file
+        working-directory: ./localstaging
+        run: |
+          echo "${{ secrets.ENCODED_DJANGO_ENV }}" | base64 --decode > .env
+
       - name: Build Docker Compose
         working-directory: ./localstaging
         run: docker compose build
