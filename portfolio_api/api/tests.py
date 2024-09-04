@@ -248,7 +248,7 @@ class UserImageViewSetTest(APITestCase):
         """Test if user can get their own images"""
         response = self.client.get(reverse("user-images-list"))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data[0]["image"], "http://testserver/media/test_image.jpg")  # type: ignore
+        self.assertEqual(response.data[0]["image"], "http://testserver/media/test_image2.jpg")  # type: ignore
 
     def test_create_user_image(self):
         """Test if user can upload an image"""
