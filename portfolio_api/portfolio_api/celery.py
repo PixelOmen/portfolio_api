@@ -13,4 +13,12 @@ USER_DATA_RESET_SCHEDULE = {
     },
 }
 
+# ---- Debug ------
+# USER_DATA_RESET_SCHEDULE = {
+#     "user_data_reset_task": {
+#         "task": "api.tasks.user_data_reset_task",
+#         "schedule": 30,
+#     },
+# }
+
 celery_app.conf.beat_schedule = USER_DATA_RESET_SCHEDULE
