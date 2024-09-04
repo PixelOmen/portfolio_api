@@ -5,6 +5,8 @@ services:
     image: redis:7.4-alpine
     ports:
       - "6379:6379"
+    expose:
+      - "6379"
 
   postgres:
     container_name: postgres
@@ -15,6 +17,8 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_DB_PASSWORD}
     ports:
       - ${POSTGRES_DB_PORT}:5432
+    expose:
+      - ${POSTGRES_DB_PORT}
 
   django_build:
     container_name: django_build
@@ -68,6 +72,6 @@ services:
       - "8000:8000"
     volumes:
       - ../portfolio_api:/app
-    # command: sh -c "python manage.py collectstatic --noinput && python manage.py makemigrations && python manage.py migrate && python manage.py seed_defaults && gunicorn portfolio_api.wsgi:application --bind 0.0.0.0:8000 --workers 3"
     command: sh -c "python manage.py collectstatic --noinput && python manage.py makemigrations && python manage.py migrate && python manage.py seed_defaults && gunicorn -k uvicorn.workers.UvicornWorker portfolio_api.asgi:application --bind 0.0.0.0:8000 --workers 3"
+    # command: sh -c "python manage.py collectstatic --noinput && python manage.py makemigrations && python manage.py migrate && python manage.py seed_defaults && gunicorn portfolio_api.wsgi:application --bind 0.0.0.0:8000 --workers 3"
     # command: sh -c "python manage.py collectstatic --noinput && python manage.py makemigrations && python manage.py migrate && python manage.py seed_defaults && python manage.py runserver 0.0.0.0:8000"

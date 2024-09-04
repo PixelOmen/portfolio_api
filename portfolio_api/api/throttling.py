@@ -12,7 +12,7 @@ class AnonDailyThrottle(AnonRateThrottle):
 
 
 class UserBurstPostThrottle(UserRateThrottle):
-    rate = "1/sec"
+    rate = "2/sec"
     scope = "burst_user_post_trx"
 
 
