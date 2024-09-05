@@ -19,7 +19,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_branch }}
+          ref: "stage"
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
