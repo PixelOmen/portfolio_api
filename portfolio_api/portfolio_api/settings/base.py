@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "api",
     "socialauth",
     "cmdutils",
+    "wschat",
 ]
 
 MIDDLEWARE = [
