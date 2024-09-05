@@ -22,6 +22,7 @@ django-ses = "*"
 channels = "*"
 channels-redis = "*"
 uvicorn = "*"
+websockets = "*"
 
 [dev-packages]
 
