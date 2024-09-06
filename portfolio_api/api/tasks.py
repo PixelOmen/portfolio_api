@@ -1,20 +1,13 @@
 import logging
+
+from django.apps import apps
 from celery import shared_task
 
 from . import email, models
+from wschat.models import UserChat
 
 
 LOGGER = logging.getLogger("celery")
-
-
-@shared_task
-def user_data_reset_task():
-    LOGGER.info("Resetting User Data")
-    for img in models.UserImage.objects.all():
-        img.image.delete(save=False)
-        img.delete()
-    models.UserPost.objects.all().delete()
-    return "User Data Reset"
 
 
 @shared_task()

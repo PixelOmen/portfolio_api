@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from api.models import UserLimits, AllowedImageMimeType
+from core.models import UserLimits, AllowedImageMimeType
 
 
 class Command(BaseCommand):
@@ -14,6 +14,7 @@ class Command(BaseCommand):
         max_image_size = settings.USER_LIMITS.get("DEFAULT_MAX_IMAGE_SIZE")
         max_user_images = settings.USER_LIMITS.get("DEFAULT_MAX_USER_IMAGES")
         max_post_length = settings.USER_LIMITS.get("DEFAULT_MAX_POST_LENGTH")
+        max_chat_messages = settings.USER_LIMITS.get("DEFAULT_MAX_CHAT_MESSAGES")
 
         for userlimit in [mimes, max_image_size, max_user_images, max_post_length]:
             if userlimit is None:
@@ -25,6 +26,7 @@ class Command(BaseCommand):
             max_image_size=max_image_size,
             max_user_images=max_user_images,
             max_post_length=max_post_length,
+            max_chat_messages=max_chat_messages,
         )
         if created_userlimits:
             self.stdout.write(

@@ -1,3 +1,4 @@
+from django.apps import apps
 from django.utils import timezone
 
 from rest_framework.views import APIView
@@ -14,6 +15,7 @@ from .throttling import (
     UserBurstImageThrottle,
     UserBurstPostThrottle,
 )
+from core.serializers import UserLimitsSerializer
 
 
 # ------------ Utility endpoints ------------
@@ -21,8 +23,9 @@ class UserLimitsView(APIView):
     """Server limits for the Frontend, not enforced by the API"""
 
     def get(self, _):
-        user_limits = models.UserLimits.objects.get(name="default")
-        serializer = serializers.UserLimitsSerializer(user_limits)
+        UserLimits = apps.get_model("core", "UserLimits")
+        user_limits = UserLimits.objects.get(name="default")
+        serializer = UserLimitsSerializer(user_limits)
         return Response(serializer.data)
 
 

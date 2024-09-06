@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     # Scheduling - Celery Beat
     "django_celery_beat",
     # Apps
+    "core",
     "api",
     "socialauth",
     "cmdutils",
@@ -140,6 +141,7 @@ USER_LIMITS = {
     "DEFAULT_MAX_IMAGE_SIZE": 5242880,
     "DEFAULT_MAX_USER_IMAGES": 10,
     "DEFAULT_MAX_POST_LENGTH": 200,
+    "DEFAULT_MAX_CHAT_MESSAGES": 5,
 }
 
 AUTHENTICATION_BACKENDS = (
