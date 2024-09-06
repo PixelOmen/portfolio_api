@@ -152,6 +152,9 @@ AUTHENTICATION_BACKENDS = (
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = "/static/"
 
+# OpenAI API Key
+OPENAI_API_KEY = env("OPENAI_API_KEY")
+
 # Google Base Settings (redirect in dev/prod settings)
 SOCIAL_AUTH_GOOGLE_AUTHCODE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env("GOOGLE_OAUTH2_CLIENT_ID")

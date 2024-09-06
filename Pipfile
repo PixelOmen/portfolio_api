@@ -23,6 +23,7 @@ channels = "*"
 channels-redis = "*"
 uvicorn = "*"
 websockets = "*"
+openai = "*"
 
 [dev-packages]
 
