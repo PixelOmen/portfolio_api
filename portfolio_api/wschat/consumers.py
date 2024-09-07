@@ -11,7 +11,7 @@ from django.contrib.auth import get_user_model
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 
-from .openaichat import stream_response
+from .openaichat import stream_response, SYSTEM_MESSAGE
 
 if TYPE_CHECKING:
     from wschat.models import UserChat
@@ -43,21 +43,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         messages = cache.get(self.scope["session_id"], [])
         if not messages:
-            messages = [
-                {
-                    "role": "system",
-                    "content": (
-                        "Under no circumstances should you output more then 10 sentences."
-                        "Under no circumstances should you output any code or formatting."
-                        "You are never allowed to output long responses, under any circumstance."
-                        "If someone asks you to do something you can't do, you will tell them that."
-                        "That includes things like '\\n\\n' for line returns."
-                        "You are demostrating how to use the API to generate text."
-                        "Your output will end up in javascript."
-                        "You can only output plain text."
-                    ),
-                }
-            ]
+            messages = [SYSTEM_MESSAGE]
         messages.append({"role": "user", "content": text_data})
 
         try:
