@@ -1,10 +1,8 @@
 import logging
 
-from django.apps import apps
 from celery import shared_task
 
-from . import email, models
-from wschat.models import UserChat
+from . import email
 
 
 LOGGER = logging.getLogger("celery")
