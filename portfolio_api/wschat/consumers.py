@@ -1,13 +1,17 @@
 import json
+import uuid
 from typing import TYPE_CHECKING
 
 from asgiref.sync import sync_to_async
 
 from django.apps import apps
 from django.utils import timezone
+from django.core.cache import cache
 from django.contrib.auth import get_user_model
 
 from channels.generic.websocket import AsyncWebsocketConsumer
+
+from .openaichat import stream_response
 
 if TYPE_CHECKING:
     from wschat.models import UserChat
@@ -24,7 +28,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         else:
             self.scope["user"] = user
             self.scope["max_chat_messages"] = await self._get_max_chat_messages()
+            self.scope["session_id"] = str(uuid.uuid4())
             await self.accept()
+
+    async def disconnect(self, close_code):
+        pass
 
     async def receive(self, text_data):
         userchat = await self._get_user_chat()
@@ -33,11 +41,75 @@ class ChatConsumer(AsyncWebsocketConsumer):
         userchat.count += 1
         await sync_to_async(userchat.save)()
 
-    async def send_message(self, text_data):
-        await self.send(text_data)
+        messages = cache.get(self.scope["session_id"], [])
+        if not messages:
+            messages = [
+                {
+                    "role": "system",
+                    "content": (
+                        "Under no circumstances should you output more then 10 sentences."
+                        "Under no circumstances should you output any code or formatting."
+                        "You are never allowed to output long responses, under any circumstance."
+                        "If someone asks you to do something you can't do, you will tell them that."
+                        "That includes things like '\\n\\n' for line returns."
+                        "You are demostrating how to use the API to generate text."
+                        "Your output will end up in javascript."
+                        "You can only output plain text."
+                    ),
+                }
+            ]
+        messages.append({"role": "user", "content": text_data})
 
-    async def disconnect(self, close_code):
-        pass
+        try:
+            response = await self._send_stream_response(messages)
+            await self._send_end_stream()
+        except Exception as e:
+            await self._send_exception(e)
+        else:
+            messages.append({"role": "assistant", "content": response})
+
+        cache.set(self.scope["session_id"], messages, timeout=60 * 60)  # 1 hour
+
+    # ------------------ Helper methods -------------------
+    # -----------------------------------------------------
+    # -----------------------------------------------------
+    # -----------------------------------------------------
+
+    async def _send_exception(self, e: Exception) -> None:
+        await self.send(
+            text_data=json.dumps(
+                {
+                    "type": "data",
+                    "payload": "",
+                    "error": str(e),
+                }
+            )
+        )
+
+    async def _send_end_stream(self) -> None:
+        await self.send(
+            text_data=json.dumps(
+                {
+                    "type": "endStream",
+                    "payload": "",
+                }
+            )
+        )
+
+    async def _send_stream_response(self, messages: list[dict[str, str]]) -> str:
+        response = ""
+        async for chunk in stream_response(messages):
+            response += chunk["content"]
+            await self.send(
+                text_data=json.dumps(
+                    {
+                        "type": "stream",
+                        "payload": chunk["content"],
+                        "chatID": chunk["chat_id"],
+                    }
+                )
+            )
+        return response
 
     async def _allowed_to_chat(self, count: int) -> bool:
         if count >= self.scope["max_chat_messages"]:

@@ -141,7 +141,7 @@ USER_LIMITS = {
     "DEFAULT_MAX_IMAGE_SIZE": 5242880,
     "DEFAULT_MAX_USER_IMAGES": 10,
     "DEFAULT_MAX_POST_LENGTH": 200,
-    "DEFAULT_MAX_CHAT_MESSAGES": 5,
+    "DEFAULT_MAX_CHAT_MESSAGES": 10,
 }
 
 AUTHENTICATION_BACKENDS = (
@@ -155,7 +155,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = "/static/"
 
 # OpenAI API Key
-OPENAI_API_KEY = env("OPENAI_API_KEY")
+OPENAI_API_KEY = env("DJANGO_OPENAI_API_KEY")
 
 # Google Base Settings (redirect in dev/prod settings)
 SOCIAL_AUTH_GOOGLE_AUTHCODE_TOKEN_URL = "https://oauth2.googleapis.com/token"
