@@ -59,6 +59,12 @@ class AnonMessageViewSet(APIView):
         serializer = serializers.AnonMessageSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            tasks.send_anon_message_email_task.delay(
+                serializer.data["name"],  # type: ignore
+                serializer.data["email"],  # type: ignore
+                serializer.data["content"],  # type: ignore
+                serializer.data["date_posted"],  # type: ignore
+            )  # type: ignore
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 

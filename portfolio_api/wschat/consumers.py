@@ -11,6 +11,8 @@ from django.contrib.auth import get_user_model
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 
+import bleach
+
 from .openaichat import stream_response, SYSTEM_MESSAGE
 
 if TYPE_CHECKING:
@@ -27,7 +29,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.close(code=1008, reason="User is not authenticated")
         else:
             self.scope["user"] = user
-            self.scope["max_chat_messages"] = await self._get_max_chat_messages()
+            max_msgs, max_post_length = await self._get_user_limits()
+            self.scope["max_chat_messages"] = max_msgs
+            self.scope["max_post_length"] = max_post_length
             self.scope["session_id"] = str(uuid.uuid4())
             await self.accept()
 
@@ -44,7 +48,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
         messages = cache.get(self.scope["session_id"], [])
         if not messages:
             messages = [SYSTEM_MESSAGE]
-        messages.append({"role": "user", "content": text_data})
+
+        max_length = self.scope["max_post_length"]
+        clean_data = bleach.clean(text_data)[:max_length]
+        messages.append({"role": "user", "content": clean_data})
 
         try:
             response = await self._send_stream_response(messages)
@@ -117,10 +124,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         userchat, _ = await sync_to_async(UserChat.objects.get_or_create)(user_id=user)
         return userchat  # type: ignore
 
-    async def _get_max_chat_messages(self) -> int:
+    async def _get_user_limits(self) -> tuple[int, int]:
         UserLimits = apps.get_model("core", "UserLimits")
         default_limits = await sync_to_async(UserLimits.objects.get)(name="default")
-        return default_limits.max_chat_messages  # type: ignore
+        max_msgs = default_limits.max_chat_messages  # type: ignore
+        max_post_length = default_limits.max_post_length  # type: ignore
+        return max_msgs, max_post_length
 
     async def _get_user_from_token(self, token) -> int | None:
         if token is None:
