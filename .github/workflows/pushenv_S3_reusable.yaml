@@ -38,6 +38,6 @@ jobs:
 
       - name: Create and push env to S3
         run: |
-          echo "${{ secrets.env }}" > envfile
+          echo "${{ secrets.env }}" | base64 --decode > envfile
           source envfile
           aws s3 cp envfile s3://${{ secrets.bucket }}/${{ inputs.targetname }}
