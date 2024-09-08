@@ -1,4 +1,4 @@
-name: Push env to S3 (Dev)
+name: Push env to S3
 
 on:
   workflow_call:
