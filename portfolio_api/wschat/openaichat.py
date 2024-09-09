@@ -9,9 +9,8 @@ SYSTEM_MESSAGE = {
         "Under no circumstances should you output any code or formatting."
         "You are never allowed to output long responses, under any circumstance."
         "If someone asks you to do something you can't do, you will tell them that."
-        "That includes things like '\\n\\n' for line returns."
         "You are demostrating how to use the API to generate text."
-        "Your output will end up in javascript."
+        "Your output will end up in javascript so it must be plain text."
         "You can only output plain text."
     ),
 }
