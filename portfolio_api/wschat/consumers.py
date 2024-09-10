@@ -89,9 +89,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
             )
         )
 
-    async def _send_stream_response(self, messages: list[dict[str, str]]) -> str:
+    async def _send_stream_response(
+        self, messages: list[dict[str, str]], stream: bool = False
+    ) -> str:
         response = ""
-        async for chunk in stream_response(messages):
+        async for chunk in stream_response(messages, stream):
             response += chunk["content"]
             await self.send(
                 text_data=json.dumps(

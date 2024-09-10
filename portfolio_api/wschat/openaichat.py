@@ -16,14 +16,17 @@ SYSTEM_MESSAGE = {
 }
 
 
-async def stream_response(messages):
+async def stream_response(messages, stream=False):
     client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
-    stream = client.chat.completions.create(
+    response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=messages,
-        stream=True,
+        stream=stream,
     )
 
-    for chunk in stream:
-        if chunk.choices and chunk.choices[0].delta.content:
-            yield {"chat_id": chunk.id, "content": chunk.choices[0].delta.content}
+    if stream:
+        for chunk in response:
+            if chunk.choices and chunk.choices[0].delta.content:  # type: ignore
+                yield {"chat_id": chunk.id, "content": chunk.choices[0].delta.content}  # type: ignore
+    else:
+        yield {"chat_id": response.id, "content": response.choices[0].message.content}  # type: ignore
